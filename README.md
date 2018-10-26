@@ -17,7 +17,7 @@ $ pip install pygame
 
 You can run the program by typing
 ```
-python main.py
+$ python main.py
 ```
 
 # Using Git from command line
