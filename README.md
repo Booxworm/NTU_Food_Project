@@ -10,3 +10,19 @@ You will need python and pygame
 ```
 $ pip install pygame
 ```
+
+To commit changes
+```
+$ git add .
+$ git commit -m "Commit message"
+```
+
+To get changes from server
+```
+$ git pull
+```
+
+To push changes to server
+```
+$ git push origin master
+```
