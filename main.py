@@ -1,36 +1,17 @@
-import pygame
+def findCanteen(criteria):
+    pass
 
-# Inits pygame
-pygame.init()
+def updateCanteen(canteen, params):
+    pass
 
-# Inits clock to limit FPS
-clock = pygame.time.Clock()
+print("Welcome to NTU F&B Recommendations!\n\
+       What would you like to do?\n\
+       1. Find a canteen (based on distance, price, rank)\n\
+       2. Update information about a canteen\n\
+       3. Exit")
 
-# Creates screen
-map = pygame.image.load("./resources/ntuMap.jpeg")
-mapSize = (1310,1600)
-scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
-map = pygame.transform.scale(map, scaledSize)
-screen = pygame.display.set_mode(scaledSize)
+user_input = input()
+while not user_input.isdigit() or int(user_input) not in range(1,4):
+    user_input = input("Give a valid input (1/2/3)")
 
-# Game loop
-running = True
-while running:
-    # Event handler
-    for event in pygame.event.get():
-        # Handles quit event
-        if event.type == pygame.QUIT:
-            running = False
-        # handle MOUSEBUTTONUP
-        if event.type == pygame.MOUSEBUTTONUP:
-            print(pygame.mouse.get_pos())
-
-    # Display map
-    screen.blit(map,(0,0))
-    pygame.display.flip()
-
-    # Set to 60 FPS
-    clock.tick(60)
-
-# Closes pygame
-pygame.quit()
+print("Thanks")
