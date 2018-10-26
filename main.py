@@ -6,9 +6,12 @@ pygame.init()
 # Inits clock to limit FPS
 clock = pygame.time.Clock()
 
-# Sreates screen
-introScreenImage = pygame.image.load("./resources/ntuMap.png")
-screen = pygame.display.set_mode((669,474))
+# Creates screen
+map = pygame.image.load("./resources/ntuMap.jpeg")
+mapSize = (1310,1600)
+scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
+map = pygame.transform.scale(map, scaledSize)
+screen = pygame.display.set_mode(scaledSize)
 
 # Game loop
 running = True
@@ -23,7 +26,7 @@ while running:
             print(pygame.mouse.get_pos())
 
     # Display map
-    screen.blit(introScreenImage,(0,0))
+    screen.blit(map,(0,0))
     pygame.display.flip()
 
     # Set to 60 FPS
