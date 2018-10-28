@@ -35,6 +35,40 @@ def findCanteen(criteria, params=False):
 def updateCanteen(canteen, params):
     pass
 
+#sorts dist between user and cateen
+def sorted_distance(user_location,canteen_location):
+   candist=[]
+   dist=[]
+   for j in range(9):
+         candist.append(cateens[can1][coords])
+   for i in range(9):
+         dist[i].append(distance_a_b(user_location,candist[i]))
+   for passnum in range(9):
+         swapped = False
+   for i in range(9-passnum):
+         if dist[i]>dist[i+1]:
+                temp = dist[i]
+                dist[i] = dist[i+1]
+                dist[i+1] = temp
+                swapped = True
+          if not swapped:
+                break;
+  #dist[0] will be the distance between user and nearest canteen
+  x=0
+  for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
+    print(dist[x], "is the dist from canteen",i)
+    x=x+1
+    
+  
+def search_by_food(foodname,foodlist_canteens):
+ list=[] 
+ for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
+       if(canteens[food][0].find(foodname)==True):
+              print("food found in", i)
+              list.append(i)
+ return(list)
+
+
 def main():
     # Get choice
     choice = getInput(actionMsg, actionList)
