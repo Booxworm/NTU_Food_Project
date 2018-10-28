@@ -14,7 +14,7 @@ def getInput(msg, options=False):
         print("{}. {}".format(i+1, options[i]))
     print("{}. Exit".format(len(options)+1))
 
-    # Gets and checks user input
+    # Gets user input
     userInput = input("Option: ")
     print()
     while not userInput.isdigit() or int(userInput) not in range(1,len(options)+2):
@@ -34,44 +34,6 @@ def findCanteen(criteria, params=False):
 # Updates information about a canteen
 def updateCanteen(canteen, params):
     pass
-
-#sorts dist between user and cateen
-def sorted_distance(user_location,canteen_location):
-   candist=[]
-   dist=[]
-   for j in range(9):
-         candist.append(cateens[can1][coords])
-   for i in range(9):
-         dist[i].append(distance_a_b(user_location,candist[i]))
-   for passnum in range(9):
-         swapped = False
-   for i in range(9-passnum):
-         if dist[i]>dist[i+1]:
-                temp = dist[i]
-                dist[i] = dist[i+1]
-                dist[i+1] = temp
-                swapped = True
-          if not swapped:
-                break;
-  #dist[0] will be the distance between user and nearest canteen
-  x=0
-  for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
-    print(dist[x], "is the dist from canteen",i)
-    x=x+1
-    
-  
-def search_by_food(foodname,foodlist_canteens):
- list=[]
- found=False
- for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
-       if(canteens[food][0].find(foodname)==True):
-              print("food found in", i)
-              list.append(i)
-              found=True
- if not found:
-    print("The food isn't available in any of the canteens")
-    return 0
- return(list)
 
 
 def main():
