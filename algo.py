@@ -64,7 +64,7 @@ def sorted_distance(user_location,canteen_location):
 def search_by_food(foodname,foodlist_canteens):
     list=[]
     found=False
-    for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
+    for i in cateens.values():
         if(canteens[food][0].find(foodname)==True):
             print("food found in", i)
             list.append(i)
