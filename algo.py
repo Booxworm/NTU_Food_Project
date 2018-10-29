@@ -57,6 +57,56 @@ def mergesort(dist):
     rightList = mergesort(rightList)
     return merge(leftList, rightList)
 
+def binarySearchList(itemList, item, ind=0, findAll=False):
+    """
+    Searches through a sorted list containing lists, and finds item within inner list
+    By default, will from index 0 of each inner list
+    Accepts a sorted list itemList, and item
+        - Accepts a range of items, use tuples or lists with max and min
+        - ('2.00', '5.00')  or  ['cat', 'dogs']
+    If 'all' flag is set, finds all lists containing that item
+    Return inner list(s) if found, empty list if not
+    """
+    if isinstance(item, (list, tuple)):
+        item_upper = item[0] if item[0] > item[1] else item[1]
+        item_lower = item[0] if item[0] < item[1] else item[1]
+    else:
+        item_lower = item_upper = item
+
+    lower = 0
+    upper = len(itemList) - 1
+    mid = (lower + upper) // 2
+    searchResult = []
+    found = False
+
+    while lower <= upper and not found:
+        # Found the first item
+        mid = (lower + upper)//2
+        if item_lower <= itemList[mid][ind] <= item_upper:
+            found = True
+            searchResult.append(itemList[mid])
+
+            # Finds the other elements in the list
+            if findAll:
+                originalMid = mid
+                # Checks previous elements for same item
+                while mid > 0 and item_lower <= itemList[mid-1][ind] <= item_upper:
+                    searchResult.append(itemList[mid-1])
+                    mid -= 1
+                # Reset mid to original mid
+                mid = originalMid
+                while  mid+1 < len(itemList) and item_lower <= itemList[mid+1][ind] <= item_upper:
+                    searchResult.append(itemList[mid+1])
+                    mid += 1
+
+        else:
+            # Item smaller than current search
+            if item_upper < itemList[mid][ind]:
+                upper = mid - 1
+            # Item larger than current search
+            else:
+                lower = mid + 1
+    return searchResult
 
 def sortedDistance(userLocation):
     """
@@ -104,53 +154,66 @@ def sortedRank():
         rank.append([canteen['rank'], canteen['name']])
     return mergesort(rank)
 
-
-def binarySearch(itemList, item):
+def searchDistance(userLocation, limit=False):
     """
-    Searches through a sorted list
-    Accepts a sorted list itemList, and item
-    Return True if found, False if not
+    Searches database for the canteens, based on distance
+    Accepts userLocation and integer limit, which limits the canteens to the closest few
+    Returns a list of canteens sorted by distance
     """
-    lower = 0
-    upper = len(itemList) - 1
-    found = False
-    while lower < upper and not found:
-        mid = (lower + upper)//2
-        if itemList[mid] == item:
-            found = True
-        else:
-            if item < itemList[mid]:
-                upper = mid - 1
-            else:
-                lower = mid + 1
-    return found
+    distList = sortedDistance(userLocation)
+    # No limit specified, returns all canteens
+    if not limit:
+        return distList
+    # Finds closest few canteens
+    else:
+        return distList[:limit]
 
-
-
-
-def searchFood(food):
+def searchFood(food=False):
     """
     Searches database for the food name
     Accepts string food
-    Returns an array of canteens that the food can be found in, or False if not found
+    Returns a list of canteens that the food can be found in, or empty list if not found
     """
     foodList = sortedFood()
-    binarySearch(foodList, food)
-    if not found:
-        print("The food isn't available in any of the canteens")
-        return 0
-    return(list)
+    # No food specified, returns all food
+    if not food:
+        return foodList
+    # Finds all canteens that have that food
+    searchedFoodList = binarySearchList(foodList, food, findAll=True)
+    # If search returns empty list
+    if not len(searchedFoodList):
+        print("{} isn't available in any of the canteens".format(food))
+    return searchedFoodList
 
 def searchPrice(upper=False, lower=False):
-    list=[]
-    list2=[]
-    for canteen in canteens:
-        for food, price in canteen['food'].items():
-            print("{} costs {}".format(food, price))
-            list.append(canteen['food'].items())
+    """
+    Searches database for all food within the price range
+    Accepts string upper and lower limits of price
+        - If no input provided, returns food sorted by price (i.e. ['2.00', 'chicken rice', 'can2'])
+        - If upper/lower limit provided, returns food below/above that limit respectively
+        - If no food is found to be within the price range, an empty list is returned
+    """
+    priceList = sortedPrice()
+    # No limit specified, returns all food
+    if not upper and not lower:
+        return priceList
+    # Finds all canteens that have food within that price
+    searchedPriceList = binarySearchList(priceList, (lower, upper), findAll=True)
+    # If search returns empty list
+    if not len(searchedPriceList):
+        print("{} isn't available in any of the canteens")
+    return searchedPriceList
 
-    sort_list=mergesort(list)
-    if(lower<=sort_list<=upper):
-        list2.append(sort_list['food'])
-
-    return list2
+def searchRank(limit=False):
+    """
+    Searches database for the canteens, based on rank
+    Accepts integer limit, which limits the canteens to the top few
+    Returns a list of canteens sorted by rank
+    """
+    rankList = sortedRank()
+    # No limit specified, returns all canteens
+    if not limit:
+        return rankList
+    # Finds top few canteens
+    else:
+        return rankList[:limit]
