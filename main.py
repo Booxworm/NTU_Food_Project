@@ -47,7 +47,6 @@ def main():
             elif criteria == '2':
                 params = getInput("Please choose a price")
 
-            print(canteen)
 
     # Updates canteen
     elif choice == '2':

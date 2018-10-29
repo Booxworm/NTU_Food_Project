@@ -53,13 +53,13 @@ def sorted_distance(user_location):
 
     dist=[]
     for canteen in canteens:
-        temp = [canteen['name']]
-        temp.append(distance_a_b(user_location,canteen['coords']))
+        temp = [distance_a_b(user_location,canteen['coords'])]
+        temp.append(canteen['name'])
+        
         dist.append(temp)
 
     asc_dist=mergesort(dist)
     return asc_dist
-
 
 def search_by_food(foodname,foodlist_canteens):
 
