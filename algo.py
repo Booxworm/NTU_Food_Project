@@ -84,4 +84,5 @@ def distance_a_b(a, b):
     dx = a[0] - b[0]
     dy = a[1] - b[1]
     dist = math.sqrt (dx * dx + dy * dy)
+    output = round (dist, 2)
     return dist
