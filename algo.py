@@ -10,6 +10,9 @@ Things to work on:
 7. Overall try comment your code for readability
 """
 
+from resources.db import canteens
+print(canteens['can1']['coords'])
+
 def merge(left_list, right_list):
 
     result_list = []
@@ -29,7 +32,7 @@ def merge(left_list, right_list):
     else:
     #right list still contain elements. Append its contents to end of the result list
         result_list.extend(right_list)
-    
+
     return result_list
 
 
@@ -55,7 +58,8 @@ def sorted_distance(user_location,canteen_location):
     for i in range(9):
         dist[i].append(distance_a_b(user_location,candist[i]))
     asc_dist=mergesort(dist)
-  
+
+    return asc_dist
 
 
 def search_by_food(foodname,foodlist_canteens):
@@ -70,3 +74,6 @@ def search_by_food(foodname,foodlist_canteens):
         print("The food isn't available in any of the canteens")
         return 0
     return(list)
+
+def search_by_price(lower, upper=False):
+    pass
