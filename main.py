@@ -2,8 +2,13 @@ from resources.db import canteens
 import gui
 import algo
 
-# Gets user input, returns a number based on the option selected
 def getInput(msg, options=False):
+    """
+    Prints out the input message, and lists out all the options provided
+    Adds an 'Exit' option as the last option
+    Accepts the input message, and a list of options [optional] as parameters
+    Returns user input as a string, between '1' and the maximum number of options i.e. '5'
+    """
     # Displays input message
     print(msg)
 
@@ -25,6 +30,14 @@ def getInput(msg, options=False):
 
 
 def main():
+    """
+    Main function, handles user choice
+    - Find a canteen based on:
+        - Distance
+        - Price
+        - Rank
+    - Update info of a canteen
+    """
     # Get choice
     choice = getInput(actionMsg, actionList)
 
@@ -40,7 +53,8 @@ def main():
         else:
             # Distance
             if criteria == '1':
-                coords = gui.getCoordsClick()
+                print("Please click your current location")
+                coords = gui.getCoordsClick(mapPath, scaledSize)
                 sorted_by_dist = algo.sorted_distance(coords)
                 print(sorted_by_dist)
             # Price
@@ -55,6 +69,11 @@ def main():
 
     # End program
     print("Thanks")
+
+# Image of map of NTU
+mapPath = "./resources/ntuMap.jpeg"
+mapSize = (1310,1600)
+scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
 
 # List of messages / options
 actionMsg = "Welcome to NTU F&B Recommendations!\nWhat would you like to do?"

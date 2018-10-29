@@ -1,6 +1,11 @@
 import pygame
 
-def getCoordsClick():
+def getCoordsClick(imagePath, size):
+    """
+    getCoordsClick creates an image based on the input, and returns the co-ordinates of the mouse click
+    Accepts path to file, and image resolution as parameters
+    Returns a tuple (x,y)
+    """
     # Inits pygame
     pygame.init()
 
@@ -8,11 +13,9 @@ def getCoordsClick():
     clock = pygame.time.Clock()
 
     # Creates screen
-    map = pygame.image.load("./resources/ntuMap.jpeg")
-    mapSize = (1310,1600)
-    scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
-    map = pygame.transform.scale(map, scaledSize)
-    screen = pygame.display.set_mode(scaledSize)
+    image = pygame.image.load(imagePath)
+    map = pygame.transform.scale(image, size)
+    screen = pygame.display.set_mode(size)
 
     # Co-ordinates of user click
     coords = False
