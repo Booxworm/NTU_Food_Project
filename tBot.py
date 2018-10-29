@@ -9,7 +9,7 @@ import main as m
 import algo as a
 
 # Bot token
-API_KEY = "746454645:AAFOJ8q1TQVug9tyQGvydGiDhShCvVHwF7c"
+API_KEY = "TOKEN"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
