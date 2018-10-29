@@ -1,23 +1,13 @@
 canteens = [
     {
-        'name': 'default',
-        'coords' : (436,566), #a tuple as value
-        'food' : { # a dictionary as value
+        'name' : 'can1',
+        'coords' : (291,311), # a tuple as value
+        'food' : {
             'food_name1' : 2.00, # price1, float
             'food_name2' : 8.00,
         },
-        'rank' : 11, #from 1 to 10
-        'opening_hours' : ('0800','2300') # the range of opening hours
-    },
-    {
-        'name' : 'can1',
-        'coords' : (291,311),
-        'food' : {
-            'food_name1' : 2.00,
-            'food_name2' : 8.00,
-        },
-        'rank' : 1,
-        'opening_hours' : ('0700','2100')
+        'rank' : 1,  #from 1 to 10
+        'opening_hours' : ('0700','2100') # the range of opening hours
     },
     {
         'name' : 'can2',
@@ -100,7 +90,7 @@ canteens = [
         'opening_hours' : ('0700','2100') #Sundays closed
     },
     {
-        'name' : 'QuadCafe',
+        'name' : 'quadCafe',
         'coords' : (104,362),
         'food' : {
             'food_name1' : 2.00,
