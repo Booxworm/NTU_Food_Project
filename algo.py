@@ -11,7 +11,6 @@ Things to work on:
 """
 
 from resources.db import canteens
-print(canteens['can1']['coords'])
 
 def merge(left_list, right_list):
 
@@ -75,5 +74,9 @@ def search_by_food(foodname,foodlist_canteens):
         return 0
     return(list)
 
-def search_by_price(lower, upper=False):
-    pass
+def search_by_price(lower=False, upper=False):
+    for canteen in canteens.values():
+        for food, price in canteen['food'].items():
+            print("{} costs {}".format(food, price))
+
+search_by_price()
