@@ -9,6 +9,43 @@ Things to work on:
 6. No return statement
 7. Overall try comment your code for readability
 """
+
+def merge(left_list, right_list):
+
+    result_list = []
+
+    # while left and right list has elements
+    while left_list and right_list:
+        if left_list[0] < right_list[0]:
+            result_list.append(left_list[0])
+            left_list.pop(0)
+        else:
+            result_list.append(right_list[0])
+            right_list.pop(0)
+
+    #left list still contain elements. Append its contents to end of the result list
+    if left_list:
+        result_list.extend(left_list)
+    else:
+    #right list still contain elements. Append its contents to end of the result list
+        result_list.extend(right_list)
+    
+    return result_list
+
+
+def mergesort(dist):
+    list_len = len(dist)
+    # base case
+    if list_len < 2:
+        return list_of_items
+    left_list = dist[:list_len // 2]   # //
+    right_list = dist[list_len // 2:]  # "//" to force division
+
+    # merge sort left and right list recursively
+    left_list = mergesort(left_list)
+    right_list = mergesort(right_list)
+    return merge(left_list, right_list)
+
 #sorts dist between user and cateen
 def sorted_distance(user_location,canteen_location):
     candist=[]
@@ -17,21 +54,8 @@ def sorted_distance(user_location,canteen_location):
         candist.append(cateens[can1][coords])
     for i in range(9):
         dist[i].append(distance_a_b(user_location,candist[i]))
-    for passnum in range(9):
-        swapped = False
-    for i in range(9-passnum):
-        if dist[i]>dist[i+1]:
-            temp = dist[i]
-            dist[i] = dist[i+1]
-            dist[i+1] = temp
-            swapped = True
-    if not swapped:
-        break;
-  #dist[0] will be the distance between user and nearest canteen
-  x=0
-  for i in [1,2,9,11,13,14,16,"NS","Koufu","Quad Cafe"]:
-    print(dist[x], "is the dist from canteen",i)
-    x=x+1
+    asc_dist=mergesort(dist)
+  
 
 
 def search_by_food(foodname,foodlist_canteens):
