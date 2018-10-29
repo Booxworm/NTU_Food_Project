@@ -49,26 +49,26 @@ def mergesort(dist):
     return merge(left_list, right_list)
 
 #sorts dist between user and cateen
-def sorted_distance(user_location,canteen_location):
-    candist=[]
+def sorted_distance(user_location):
+    
     dist=[]
-    for j in range(9):
-        candist.append(cateens[can1][coords])
-    for i in range(9):
-        dist[i].append(distance_a_b(user_location,candist[i]))
-    asc_dist=mergesort(dist)
+    for canteen in canteens.values():
+        temp = [canteen.keys()[0]]
+        temp.append(distance_a_b(user_location,canteens['coords']))
+        dist.append(temp)
+      asc_dist=mergesort(dist)
 
-    return asc_dist
+      return asc_dist
 
 
 def search_by_food(foodname,foodlist_canteens):
-    list=[]
+    
     found=False
-    for i in cateens.values():
-        if(canteens[food][0].find(foodname)==True):
-            print("food found in", i)
-            list.append(i)
+    for i in foodlist_canteens.values():
+        if(i.find(foodname)==True):
+            print("food found in", )
             found=True
+            
     if not found:
         print("The food isn't available in any of the canteens")
         return 0
