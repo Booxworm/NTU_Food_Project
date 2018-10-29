@@ -64,9 +64,9 @@ def sorted_distance(user_location):
 def search_by_food(foodname,foodlist_canteens):
 
     found=False
-    for canteen in foodlist_canteens.values():
-        if(canteen.find(foodname)==True):
-            print("food found in", foodlist_canteens.keys())
+    for canteen in canteens
+        if(canteen['food'].find(foodname)):
+            print("food found in", canteen['name'])
             found=True
 
     if not found:
@@ -79,10 +79,11 @@ def search_by_price(lower=False, upper=False):
         for food, price in canteen['food'].items():
             print("{} costs {}".format(food, price))
 
-def distance_a_b(a, b):
+"""def distance_a_b(a, b):
     # a and b are tuples with 2 elements
     dx = a[0] - b[0]
     dy = a[1] - b[1]
     dist = math.sqrt (dx * dx + dy * dy)
     output = round (dist, 2)
     return dist
+"""
