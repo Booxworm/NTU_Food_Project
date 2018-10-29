@@ -56,17 +56,22 @@ def sorted_distance(user_location):
         temp = [canteen['name']]
         temp.append(distance_a_b(user_location,canteen['coords']))
         dist.append(temp)
+<<<<<<< HEAD
 
     asc_dist=mergesort(dist)
+=======
+    asc_dist=mergesort(dist)
+
+>>>>>>> 2f76808aa935147448031560b10febc6909ad769
     return asc_dist
 
 
 def search_by_food(foodname,foodlist_canteens):
 
     found=False
-    for i in foodlist_canteens.values():
-        if(i.find(foodname)==True):
-            print("food found in", )
+    for canteen in foodlist_canteens.values():
+        if(canteen.find(foodname)==True):
+            print("food found in", foodlist_canteens.keys())
             found=True
 
     if not found:
