@@ -39,15 +39,15 @@ def merge(leftList, rightList):
     return merged
 
 
-def mergesort(dist):
+def mergesort(alist):
     """
     Mergesort recursively divides up the list into two, and merges the two serparate lists together
     Returns a sorted list
     """
-    listLen = len(dist)
+    listLen = len(alist)
     # Base case
     if listLen < 2:
-        return dist
+        return alist
 
     leftList = dist[:listLen // 2]
     rightList = dist[listLen // 2:]  # "//" to force division
@@ -57,10 +57,15 @@ def mergesort(dist):
     rightList = mergesort(rightList)
     return merge(leftList, rightList)
 
-def binarySearchList(itemList, item, ind=0, findAll=False):
+def binarySearchList(itemList, item, findAll=True, ind=0):
     """
     Searches through a sorted list containing lists, and finds item within inner list
-    By default, will from index 0 of each inner list
+    By default, will check index 0 of each inner list
+
+                 |                   |
+                 V                   V
+            [['item1', 'item2'], ['item3', 'item4'], ...]
+
     Accepts a sorted list itemList, and item
         - Accepts a range of items, use tuples or lists with max and min
         - ('2.00', '5.00')  or  ['cat', 'dogs']
@@ -179,13 +184,13 @@ def searchFood(food=False):
     if not food:
         return foodList
     # Finds all canteens that have that food
-    searchedFoodList = binarySearchList(foodList, food, findAll=True)
+    searchedFoodList = binarySearchList(foodList, food)
     # If search returns empty list
     if not len(searchedFoodList):
         print("{} isn't available in any of the canteens".format(food))
     return searchedFoodList
 
-def searchPrice(upper=False, lower=False):
+def searchPrice(lower=False, upper=False):
     """
     Searches database for all food within the price range
     Accepts string upper and lower limits of price
@@ -195,10 +200,10 @@ def searchPrice(upper=False, lower=False):
     """
     priceList = sortedPrice()
     # No limit specified, returns all food
-    if not upper and not lower:
+    if not lower and not upper:
         return priceList
     # Finds all canteens that have food within that price
-    searchedPriceList = binarySearchList(priceList, (lower, upper), findAll=True)
+    searchedPriceList = binarySearchList(priceList, (lower, upper))
     # If search returns empty list
     if not len(searchedPriceList):
         print("{} isn't available in any of the canteens")
