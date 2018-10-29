@@ -9,7 +9,7 @@ Things to work on:
 6. No return statement
 7. Overall try comment your code for readability
 """
-
+import math
 from resources.db import canteens
 
 def merge(left_list, right_list):
@@ -80,4 +80,8 @@ def search_by_price(lower=False, upper=False):
             print("{} costs {}".format(food, price))
 
 def distance_a_b(a, b):
-    return 1
+    # a and b are tuples with 2 elements
+    dx = a[0] - b[0]
+    dy = a[1] - b[1]
+    dist = math.sqrt (dx * dx + dy * dy)
+    return dist
