@@ -1,4 +1,6 @@
+from resources.db import canteens
 import gui
+import algo
 
 # Gets user input, returns a number based on the option selected
 def getInput(msg, options=False):
@@ -21,20 +23,6 @@ def getInput(msg, options=False):
         userInput = input("Give a valid input ({}): ".format('/'.join(range(1,len(options)+2))))
     return userInput
 
-# Finds a canteen based on criteria
-def findCanteen(criteria, params=False):
-    if criteria == 'Distance':
-        pass
-    elif criteria == 'Price':
-        pass
-    elif criteria == 'Rank':
-        pass
-    return True
-
-# Updates information about a canteen
-def updateCanteen(canteen, params):
-    pass
-
 
 def main():
     # Get choice
@@ -50,15 +38,15 @@ def main():
 
         # Find canteen based on criteria
         else:
-            params = False
             # Distance
             if criteria == '1':
-                params = gui.getCoordsClick()
+                coords = gui.getCoordsClick()
+                sorted_by_dist = algo.sorted_distance(coords)
+                print(sorted_by_dist)
             # Price
             elif criteria == '2':
                 params = getInput("Please choose a price")
 
-            canteen = findCanteen(criteriaList[int(criteria)-1], params)
             print(canteen)
 
     # Updates canteen

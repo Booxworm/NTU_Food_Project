@@ -79,4 +79,5 @@ def search_by_price(lower=False, upper=False):
         for food, price in canteen['food'].items():
             print("{} costs {}".format(food, price))
 
-search_by_price()
+def distance_a_b(a, b):
+    return 1
