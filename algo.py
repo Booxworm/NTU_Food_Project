@@ -49,7 +49,7 @@ def mergesort(dist):
     return merge(left_list, right_list)
 
 #sorts dist between user and cateen
-def sorted_distance(user_location,canteen_location):
+def sorted_distance(user_location):
     candist=[]
     dist=[]
     for j in range(9):
