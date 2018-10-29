@@ -55,12 +55,11 @@ def main():
             if criteria == '1':
                 print("Please click your current location")
                 coords = gui.getCoordsClick(mapPath, scaledSize)
-                sorted_by_dist = algo.sorted_distance(coords)
-                print(sorted_by_dist)
+                sortedByDist = algo.sortedDistance(coords)
+                print(sortedByDist)
             # Price
             elif criteria == '2':
                 params = getInput("Please choose a price")
-
 
     # Updates canteen
     elif choice == '2':
