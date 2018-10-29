@@ -39,7 +39,7 @@ def mergesort(dist):
     list_len = len(dist)
     # base case
     if list_len < 2:
-        return list_of_items
+        return dist
     left_list = dist[:list_len // 2]   # //
     right_list = dist[list_len // 2:]  # "//" to force division
 
