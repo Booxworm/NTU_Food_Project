@@ -74,18 +74,24 @@ def search_by_food(foodname,foodlist_canteens):
         return 0
     return(list)
 
-"""def search_by_price(lower=False, upper=False):
+def search_by_price(upper=False, lower=False):
     list=[]
+    list2=[]
     for canteen in canteens:
         for food, price in canteen['food'].items():
             print("{} costs {}".format(food, price))
             list.append(canteen['food'].items())
-    mid=(lower+upper)/2.0
-    while lower<=upper:
-        if list[mid]>=mid:
-          lower=mid+1
-        else:
-          upper=mid-1"""
+            
+    sort_list=mergesort(list)
+    if(lower<=sort_list<=upper):
+        list2.append(sort_list['food'])
+    
+    return list2
+        
+        
+   
+        
+          
         
 
 def distance_a_b(a, b):
@@ -93,5 +99,5 @@ def distance_a_b(a, b):
     dx = a[0] - b[0]
     dy = a[1] - b[1]
     dist = math.sqrt (dx * dx + dy * dy)
-    return dist
+    return round(dist,2)
 
