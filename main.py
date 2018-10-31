@@ -14,7 +14,9 @@ def getInput(msg, options=False):
 
     # No options
     if not options:
-        return input()
+        userInput = input()
+        print()
+        return userInput
 
     # Prints out all options
     for i in range(len(options)):
@@ -38,6 +40,7 @@ def main():
         - Rank
     - Update info of a canteen
     """
+    print()
     # Get choice
     choice = getInput(actionMsg, actionList)
 
@@ -56,10 +59,33 @@ def main():
                 print("Please click your current location")
                 coords = gui.getCoordsClick(mapPath, scaledSize)
                 sortedByDist = algo.sortedDistance(coords)
-                print(sortedByDist)
-            # Price
+                for (dist, canteen) in sortedByDist:
+                    print("{}: {}".format(canteen, dist))
+            # Food
             elif criteria == '2':
-                params = getInput("Please choose a price")
+                food = getInput("What food would you like to eat today?")
+                sortedByFood = algo.searchFood(food.lower())
+                if sortedByFood:
+                    for (food, canteen) in sortedByFood:
+                        print("{} has {}".format(canteen, food))
+            # Price
+            elif criteria == '3':
+                priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
+                prices = priceRange.split(' ')
+                if len(prices) < 2:
+                    print(prices[0])
+                    sortedByPrice = algo.searchPrice(float(prices[0]))
+                else:
+                    sortedByPrice = algo.searchPrice(float(prices[1]), float(prices[0]))
+                if sortedByPrice:
+                    for (price, food, canteen) in sortedByPrice:
+                        print("{} has {} which costs {}".format(canteen, food, price))
+            # Rank
+            elif criteria == '4':
+                rank = getInput("How many results do you want to get?")
+                sortedByRank = algo.searchRank(int(rank))
+                for (rank, canteen) in sortedByRank:
+                    print("{}. {}".format(rank, canteen))
 
     # Updates canteen
     elif choice == '2':
@@ -75,11 +101,11 @@ scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
 
 # List of messages / options
 actionMsg = "Welcome to NTU F&B Recommendations!\nWhat would you like to do?"
-actionList = ["Find a canteen (based on distance, price, rank)",
+actionList = ["Find a canteen (based on certain criteria)",
               "Update information about a canteen"]
 
 criteriaMsg = "What is the criteria you want to use?"
-criteriaList = ['Distance', 'Price', 'Rank']
+criteriaList = ['Distance', 'Food', 'Price', 'Rank']
 
 updateMsg = "What would you like to do?"
 updateList = ["List out all information",

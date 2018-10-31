@@ -1,4 +1,4 @@
-import math
+from math import sqrt
 from resources.db import canteens
 
 def getDistance(a, b):
@@ -10,7 +10,7 @@ def getDistance(a, b):
     # a and b are tuples with 2 elements
     dx = a[0] - b[0]
     dy = a[1] - b[1]
-    dist = math.sqrt (dx * dx + dy * dy)
+    dist = sqrt (dx * dx + dy * dy)
     return round(dist,2)
 
 def merge(leftList, rightList):
@@ -49,8 +49,8 @@ def mergesort(alist):
     if listLen < 2:
         return alist
 
-    leftList = dist[:listLen // 2]
-    rightList = dist[listLen // 2:]  # "//" to force division
+    leftList = alist[:listLen // 2]
+    rightList = alist[listLen // 2:]  # "//" to force division
 
     # Mergesort left and right list recursively
     leftList = mergesort(leftList)
@@ -190,7 +190,7 @@ def searchFood(food=False):
         print("{} isn't available in any of the canteens".format(food))
     return searchedFoodList
 
-def searchPrice(lower=False, upper=False):
+def searchPrice(upper=False, lower=False):
     """
     Searches database for all food within the price range
     Accepts string upper and lower limits of price
