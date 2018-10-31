@@ -1,4 +1,3 @@
-from resources.db import canteens
 import gui
 import algo
 
@@ -72,9 +71,14 @@ def main():
             elif criteria == '3':
                 priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
                 prices = priceRange.split(' ')
-                if len(prices) < 2:
-                    print(prices[0])
+
+                # Empty input
+                if not len(priceRange):
+                    sortedByPrice = algo.searchPrice()
+                # User entered only one number - upper limit
+                elif len(prices) < 2:
                     sortedByPrice = algo.searchPrice(float(prices[0]))
+                # User entered two numbers - lower limit
                 else:
                     sortedByPrice = algo.searchPrice(float(prices[1]), float(prices[0]))
                 if sortedByPrice:

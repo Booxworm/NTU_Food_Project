@@ -1,5 +1,5 @@
 from math import sqrt
-from resources.db import canteens
+import db
 
 def getDistance(a, b):
     """
@@ -72,9 +72,11 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
     If 'all' flag is set, finds all lists containing that item
     Return inner list(s) if found, empty list if not
     """
+    # If item is a tuple or a list, search within the range
     if isinstance(item, (list, tuple)):
         item_upper = item[0] if item[0] > item[1] else item[1]
         item_lower = item[0] if item[0] < item[1] else item[1]
+    # Else search for the item
     else:
         item_lower = item_upper = item
 
@@ -84,6 +86,7 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
     searchResult = []
     found = False
 
+    # Iteratively searches through the list for item
     while lower <= upper and not found:
         # Found the first item
         mid = (lower + upper)//2
@@ -121,6 +124,7 @@ def sortedDistance(userLocation):
         [['65', 'can1'], ['71', 'can9'], ['104', 'NS']]
     """
     dist = []
+    canteens = db.readFile()
     for canteen in canteens:
         temp = [getDistance(userLocation,canteen['coords'])]
         temp.append(canteen['name'])
@@ -133,6 +137,7 @@ def sortedFood():
         [['chicken rice', 'NS'], ['duck rice', 'can9'], ['mala', 'can1']]
     """
     foodList = []
+    canteens = db.readFile()
     for canteen in canteens:
         for food in canteen['food'].keys():
             foodList.append([food, canteen['name']])
@@ -144,6 +149,7 @@ def sortedPrice():
         [['3.00','duck rice','can9'], ['3.50','chicken rice','NS'], ['4.00','mala', 'can1']]
     """
     priceList = []
+    canteens = db.readFile()
     for canteen in canteens:
         for food, price in canteen['food'].items():
             priceList.append([price, food, canteen['name']])
@@ -155,6 +161,7 @@ def sortedRank():
         [[1, 'can1'], [2, 'can2'], [3, 'can9']]
     """
     rank = []
+    canteens = db.readFile()
     for canteen in canteens:
         rank.append([canteen['rank'], canteen['name']])
     return mergesort(rank)
@@ -222,3 +229,6 @@ def searchRank(limit=False):
     # Finds top few canteens
     else:
         return rankList[:limit]
+
+def filter(criteria, alist):
+    pass
