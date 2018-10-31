@@ -46,4 +46,10 @@ def readFile():
             canteens.append(c)
     return canteens
 
+def updateCanteen(canData):
+    pass
+
+def deleteCanteen(canName):
+    pass
+
 pathToFile = "./resources/db.txt"
