@@ -116,52 +116,51 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
                 lower = mid + 1
     return searchResult
 
-def sortedDistance(userLocation):
+def sortedDistance(userLocation, canteens=db.readFile()):
     """
     Gets the distance between the user's location and each of the canteens
-    Accepts userLocation as tuple (x,y)
+    Accepts userLocation as tuple (x,y), and optional argument list of canteens
     Returns a sorted array of distances from the canteens, in ascending order
         [['65', 'can1'], ['71', 'can9'], ['104', 'NS']]
     """
     dist = []
-    canteens = db.readFile()
     for canteen in canteens:
         temp = [getDistance(userLocation,canteen['coords'])]
         temp.append(canteen['name'])
         dist.append(temp)
     return mergesort(dist)
 
-def sortedFood():
+def sortedFood(canteens=db.readFile()):
     """
+    Accepts an optional list of canteens
     Returns a sorted array of food and the canteen it is from, in ascending order
         [['chicken rice', 'NS'], ['duck rice', 'can9'], ['mala', 'can1']]
     """
     foodList = []
-    canteens = db.readFile()
     for canteen in canteens:
         for food in canteen['food'].keys():
             foodList.append([food, canteen['name']])
     return mergesort(foodList)
 
-def sortedPrice():
+def sortedPrice(canteens=db.readFile()):
     """
+    Accepts an optional list of canteens
     Returns a sorted array of prices and food from each canteen, in ascending order
         [['3.00','duck rice','can9'], ['3.50','chicken rice','NS'], ['4.00','mala', 'can1']]
     """
     priceList = []
-    canteens = db.readFile()
     for canteen in canteens:
         for food, price in canteen['food'].items():
             priceList.append([price, food, canteen['name']])
     return mergesort(priceList)
 
-def sortedRank():
+def sortedRank(canteens=db.readFile()):
     """
+    Accepts an optional list of canteens
     Returns a sorted array ranking each canteen, in ascending order
         [[1, 'can1'], [2, 'can2'], [3, 'can9']]
     """
     rank = []
-    canteens = db.readFile()
     for canteen in canteens:
         rank.append([canteen['rank'], canteen['name']])
     return mergesort(rank)
@@ -230,5 +229,14 @@ def searchRank(limit=False):
     else:
         return rankList[:limit]
 
-def filter(criteria, alist):
-    pass
+def addFilter(filter, alist=db.readFile()):
+    if filter == 'Distance':
+        pass
+    elif filter == 'Food':
+        pass
+    elif filter == 'Price':
+        pass
+    elif filter == 'Rank':
+        pass
+    else:
+        pass
