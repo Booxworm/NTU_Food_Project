@@ -38,6 +38,12 @@ def merge(leftList, rightList):
 
     return merged
 
+def mer(left, right):
+    merged=[]
+    while left[0]['xyz']<right[0]['xyz']:
+        merged.append(left[0]['xyz']
+  
+
 
 def mergesort(alist):
     """
@@ -157,7 +163,7 @@ def sortedPrice(canteens=db.readFile()):
 def sortedRank(canteens=db.readFile()):
     """
     Accepts an optional list of canteens
-    Returns a sorted array ranking each canteen, in ascending order
+    Returns a sorted array ranking each cante en, in ascending order
         [[1, 'can1'], [2, 'can2'], [3, 'can9']]
     """
     rank = []
@@ -221,7 +227,10 @@ def searchRank(limit=False):
     Accepts integer limit, which limits the canteens to the top few
     Returns a list of canteens sorted by rank
     """
-    rankList = sortedRank()
+    
+    
+   
+    rankList = sortedRank() 
     # No limit specified, returns all canteens
     if not limit:
         return rankList
