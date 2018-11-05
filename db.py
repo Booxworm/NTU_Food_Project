@@ -14,7 +14,7 @@ def writeFile(canData):
             foodList = []
             for food, price in c['food'].items():
                 foodList.append("{}:{}".format(food,price))
-            f.write("{} {},{} {} {} {}\n".format(c['name'],
+            f.write("{} {},{} {} {},{} {}\n".format(c['name'],
                                                  c['coords'][0],c['coords'][1],
                                                  c['rank'],
                                                  c['opening_hours'][0],c['opening_hours'][1],
