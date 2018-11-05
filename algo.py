@@ -1,5 +1,5 @@
 from math import sqrt
-from resources.db import canteens
+import db
 
 def getDistance(a, b):
     """
@@ -38,6 +38,12 @@ def merge(leftList, rightList):
 
     return merged
 
+def mer(left, right):
+    merged=[]
+    while left[0]['xyz']<right[0]['xyz']:
+        merged.append(left[0]['xyz']
+
+
 
 def mergesort(alist):
     """
@@ -61,20 +67,20 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
     """
     Searches through a sorted list containing lists, and finds item within inner list
     By default, will check index 0 of each inner list
-
                  |                   |
                  V                   V
             [['item1', 'item2'], ['item3', 'item4'], ...]
-
     Accepts a sorted list itemList, and item
         - Accepts a range of items, use tuples or lists with max and min
         - ('2.00', '5.00')  or  ['cat', 'dogs']
     If 'all' flag is set, finds all lists containing that item
     Return inner list(s) if found, empty list if not
     """
+    # If item is a tuple or a list, search within the range
     if isinstance(item, (list, tuple)):
         item_upper = item[0] if item[0] > item[1] else item[1]
         item_lower = item[0] if item[0] < item[1] else item[1]
+    # Else search for the item
     else:
         item_lower = item_upper = item
 
@@ -84,6 +90,7 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
     searchResult = []
     found = False
 
+    # Iteratively searches through the list for item
     while lower <= upper and not found:
         # Found the first item
         mid = (lower + upper)//2
@@ -113,10 +120,10 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
                 lower = mid + 1
     return searchResult
 
-def sortedDistance(userLocation):
+def sortedDistance(userLocation, canteens=db.readFile()):
     """
     Gets the distance between the user's location and each of the canteens
-    Accepts userLocation as tuple (x,y)
+    Accepts userLocation as tuple (x,y), and optional argument list of canteens
     Returns a sorted array of distances from the canteens, in ascending order
         [['65', 'can1'], ['71', 'can9'], ['104', 'NS']]
     """
@@ -127,8 +134,9 @@ def sortedDistance(userLocation):
         dist.append(temp)
     return mergesort(dist)
 
-def sortedFood():
+def sortedFood(canteens=db.readFile()):
     """
+    Accepts an optional list of canteens
     Returns a sorted array of food and the canteen it is from, in ascending order
         [['chicken rice', 'NS'], ['duck rice', 'can9'], ['mala', 'can1']]
     """
@@ -138,8 +146,9 @@ def sortedFood():
             foodList.append([food, canteen['name']])
     return mergesort(foodList)
 
-def sortedPrice():
+def sortedPrice(canteens=db.readFile()):
     """
+    Accepts an optional list of canteens
     Returns a sorted array of prices and food from each canteen, in ascending order
         [['3.00','duck rice','can9'], ['3.50','chicken rice','NS'], ['4.00','mala', 'can1']]
     """
@@ -149,9 +158,10 @@ def sortedPrice():
             priceList.append([price, food, canteen['name']])
     return mergesort(priceList)
 
-def sortedRank():
+def sortedRank(canteens=db.readFile()):
     """
-    Returns a sorted array ranking each canteen, in ascending order
+    Accepts an optional list of canteens
+    Returns a sorted array ranking each cante en, in ascending order
         [[1, 'can1'], [2, 'can2'], [3, 'can9']]
     """
     rank = []
@@ -215,6 +225,9 @@ def searchRank(limit=False):
     Accepts integer limit, which limits the canteens to the top few
     Returns a list of canteens sorted by rank
     """
+
+
+
     rankList = sortedRank()
     # No limit specified, returns all canteens
     if not limit:
@@ -222,3 +235,15 @@ def searchRank(limit=False):
     # Finds top few canteens
     else:
         return rankList[:limit]
+
+def addFilter(filter, alist=db.readFile()):
+    if filter == 'Distance':
+        pass
+    elif filter == 'Food':
+        pass
+    elif filter == 'Price':
+        pass
+    elif filter == 'Rank':
+        pass
+    else:
+        pass

@@ -1,6 +1,6 @@
-from resources.db import canteens
 import gui
 import algo
+import db
 
 def getInput(msg, options=False):
     """
@@ -27,7 +27,7 @@ def getInput(msg, options=False):
     userInput = input("Option: ")
     print()
     while not userInput.isdigit() or int(userInput) not in range(1,len(options)+2):
-        userInput = input("Give a valid input ({}): ".format('/'.join(range(1,len(options)+2))))
+        userInput = input("Give a valid input ({}): ".format('/'.join(map(str,range(1,len(options)+2)))))
     return userInput
 
 
@@ -42,10 +42,10 @@ def main():
     """
     print()
     # Get choice
-    choice = getInput(actionMsg, actionList)
+    action = getInput(actionMsg, actionList)
 
     # Finds the canteen based on criteria
-    if choice == '1':
+    if action == '1':
         criteria = getInput(criteriaMsg, criteriaList)
 
         # Exits program
@@ -72,9 +72,14 @@ def main():
             elif criteria == '3':
                 priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
                 prices = priceRange.split(' ')
-                if len(prices) < 2:
-                    print(prices[0])
+
+                # Empty input
+                if not len(priceRange):
+                    sortedByPrice = algo.searchPrice()
+                # User entered only one number - upper limit
+                elif len(prices) < 2:
                     sortedByPrice = algo.searchPrice(float(prices[0]))
+                # User entered two numbers - lower limit
                 else:
                     sortedByPrice = algo.searchPrice(float(prices[1]), float(prices[0]))
                 if sortedByPrice:
@@ -88,8 +93,25 @@ def main():
                     print("{}. {}".format(rank, canteen))
 
     # Updates canteen
-    elif choice == '2':
-        getInput(updateMsg, updateList)
+    elif action == '2':
+        update = getInput(updateMsg, updateList)
+
+        # Lists all canteens
+        if update == '1':
+            canteens = db.readFile()
+            for c in canteens:
+                print("{}:".format(c['name']))
+                print("  Coordinates - {}".format(c['coords']))
+                print("  Rank - {}".format(c['rank']))
+                print("  Opening hours - {}".format(c['opening_hours']))
+                print("  Food:")
+                for food, price in c['food'].items():
+                    print("    {0} - ${1:0.2f}".format(food, price))
+                print()
+
+        # Updates a canteen
+        elif update == '2':
+            pass
 
     # End program
     print("Thanks")
