@@ -42,7 +42,7 @@ def mer(left, right):
     merged=[]
     while left[0]['xyz']<right[0]['xyz']:
         merged.append(left[0]['xyz']
-  
+
 
 
 def mergesort(alist):
@@ -67,11 +67,9 @@ def binarySearchList(itemList, item, findAll=True, ind=0):
     """
     Searches through a sorted list containing lists, and finds item within inner list
     By default, will check index 0 of each inner list
-
                  |                   |
                  V                   V
             [['item1', 'item2'], ['item3', 'item4'], ...]
-
     Accepts a sorted list itemList, and item
         - Accepts a range of items, use tuples or lists with max and min
         - ('2.00', '5.00')  or  ['cat', 'dogs']
@@ -227,10 +225,10 @@ def searchRank(limit=False):
     Accepts integer limit, which limits the canteens to the top few
     Returns a list of canteens sorted by rank
     """
-    
-    
-   
-    rankList = sortedRank() 
+
+
+
+    rankList = sortedRank()
     # No limit specified, returns all canteens
     if not limit:
         return rankList
