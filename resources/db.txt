@@ -1,5 +1,5 @@
 can1 291,311 1 0700,2100 apple:2.0,banana:8.0
-can2 271,264 2 0700,2100 carrot:2.0,duck:8.0
+can2 271,264 2 0700,2100 duck:2.0,rice:8.0
 can9 279,141 3 0700,2100 escargot:2.0,fish:8.0
 can11 303,68 4 0700,2100 goat:2.0,hotpot:8.0
 can13 144,162 5 0700,2100 ice_cream:2.0,jackfruit:8.0
