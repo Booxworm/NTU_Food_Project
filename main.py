@@ -31,6 +31,10 @@ def getInput(msg, options=False):
     return userInput
 
 def printCanteens(canteens=db.readFile()):
+    """
+    Prints out a list of canteens
+    Accepts an optional argument list of canteens
+    """
     for c in canteens:
         print("{}:".format(c['name']))
         print("  Coordinates - {}".format(c['coords']))
@@ -76,7 +80,7 @@ def main():
                     food = getInput("What food would you like to eat today?")
                     temp = algo.searchByFood('_'.join(food.lower().split()), canteens)
                     if not len(temp):
-                        print("Are you sure you want {}? We could not find it in any of the canteens".format(food))
+                        print("Are you sure you want {}? We could not find it in any of the canteens\n".format(food))
                     else:
                         canteens = temp
 

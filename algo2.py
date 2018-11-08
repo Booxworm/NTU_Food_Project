@@ -56,13 +56,18 @@ def mergesort(alist, key):
     return mergeDict(left, right, key)
 
 def searchDict(dict, searchTerm, searchByKey=True):
+    """
+    Linearly searches through a dictionary, to see if the dict contains the searchTerm
+    If searchByKey flag is set, searches through keys only
+    Else searches through values only
+    Returns True if dict contains the search term, else returns False
+    """
     # Checks if search term is a list/tuple or a single value
     if isinstance(searchTerm, (list, tuple)):
         searchUpper = searchTerm[0] if searchTerm[0] > searchTerm[1] else searchTerm[1]
         searchLower = searchTerm[0] if searchTerm[0] < searchTerm[1] else searchTerm[1]
     else:
         searchUpper = searchLower = searchTerm
-
     # Iterates through all key:value pairs
     for k, v in dict.items():
         if searchByKey and searchLower <= k <= searchUpper:
@@ -72,6 +77,11 @@ def searchDict(dict, searchTerm, searchByKey=True):
     return False
 
 def searchByFood(food, alist=db.readFile()):
+    """
+    Searches through a list of canteens, and filters out the canteens which do not contain the food
+    Accepts a food name, and an optional argument list of canteens
+    Returns the filtered list of canteens
+    """
     # Iterates through the list to filter out the items based on food
     temp = []
     for canteen in alist:
@@ -80,6 +90,11 @@ def searchByFood(food, alist=db.readFile()):
     return temp
 
 def searchByPrice(price=[], alist=db.readFile()):
+    """
+    Searches through a list of canteens, and filters out the canteens which do not contain foodwithin the price range
+    Accepts a price range, and an option argument list of canteens
+    Returns the filtered list of canteens
+    """
     # Iterates through the list to filter out the items based on price
     temp = []
     # Range is set to all real numbers if price is not assigned a value
@@ -105,4 +120,9 @@ def sortByDist(userLocation, canteens=db.readFile()):
     return mergesort(canteens, 'dist')
 
 def sortByRank(canteens=db.readFile()):
+    """
+    Sorts the list of canteens by rank
+    Accepts optional argument list of canteens
+    Returns a sorted list of canteens
+    """
     return mergesort(canteens, 'rank')
