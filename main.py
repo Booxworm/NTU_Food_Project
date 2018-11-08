@@ -1,5 +1,5 @@
 import gui
-import algo
+import algo2 as algo
 import db
 
 def getInput(msg, options=False):
@@ -30,6 +30,22 @@ def getInput(msg, options=False):
         userInput = input("Give a valid input ({}): ".format('/'.join(map(str,range(1,len(options)+2)))))
     return userInput
 
+def printCanteens(canteens=db.readFile()):
+    """
+    Prints out a list of canteens
+    Accepts an optional argument list of canteens
+    """
+    for c in canteens:
+        print("{}:".format(c['name']))
+        print("  Coordinates - {}".format(c['coords']))
+        if 'dist' in c:
+            print("  Distance - {}".format(c['dist']))
+        print("  Rank - {}".format(c['rank']))
+        print("  Opening hours - {}".format(c['opening_hours']))
+        print("  Food:")
+        for food, price in c['food'].items():
+            print("    {0} - ${1:0.2f}".format(food, price))
+        print()
 
 def main():
     """
@@ -41,56 +57,60 @@ def main():
     - Update info of a canteen
     """
     print()
+    canteens = db.readFile()
     # Get choice
     action = getInput(actionMsg, actionList)
 
     # Finds the canteen based on criteria
     if action == '1':
-        criteria = getInput(criteriaMsg, criteriaList)
+        search = 0
 
-        # Exits program
-        if criteria == str(len(criteriaList)+1):
-            pass
+        # While user is not done, continue asking for filters
+        while not search == '3':
+            search = getInput(searchMsg, searchList)
 
-        # Find canteen based on criteria
+            # Exits program
+            if search == str(len(searchList)+1):
+                break
+
+            # Find canteen based on criteria
+            else:
+                # Search by food
+                if search == '1':
+                    food = getInput("What food would you like to eat today?")
+                    temp = algo.searchByFood('_'.join(food.lower().split()), canteens)
+                    if not len(temp):
+                        print("Are you sure you want {}? We could not find it in any of the canteens\n".format(food))
+                    else:
+                        canteens = temp
+
+                # Search by price
+                elif search == '2':
+                    priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
+                    prices = priceRange.split(' ') if priceRange else []
+                    temp = algo.searchByPrice(prices, alist=canteens)
+                    if not len(temp):
+                        print("Sorry, we could not find any canteens within the specified price range\n")
+                    else:
+                        canteens = temp
+
+        # Done
         else:
-            # Distance
-            if criteria == '1':
+            sort = getInput(sortMsg, sortList)
+
+            # Sort by distance
+            if sort == '1':
                 print("Please click your current location")
                 coords = gui.getCoordsClick(mapPath, scaledSize)
-                sortedByDist = algo.sortedDistance(coords)
-                for (dist, canteen) in sortedByDist:
-                    print("{}: {}".format(canteen, dist))
-            # Food
-            elif criteria == '2':
-                food = getInput("What food would you like to eat today?")
-                sortedByFood = algo.searchFood(food.lower())
-                if sortedByFood:
-                    for (food, canteen) in sortedByFood:
-                        print("{} has {}".format(canteen, food))
-            # Price
-            elif criteria == '3':
-                priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
-                prices = priceRange.split(' ')
+                canteens = algo.sortByDist(coords, canteens)
 
-                # Empty input
-                if not len(priceRange):
-                    sortedByPrice = algo.searchPrice()
-                # User entered only one number - upper limit
-                elif len(prices) < 2:
-                    sortedByPrice = algo.searchPrice(float(prices[0]))
-                # User entered two numbers - lower limit
-                else:
-                    sortedByPrice = algo.searchPrice(float(prices[1]), float(prices[0]))
-                if sortedByPrice:
-                    for (price, food, canteen) in sortedByPrice:
-                        print("{} has {} which costs {}".format(canteen, food, price))
-            # Rank
-            elif criteria == '4':
-                rank = getInput("How many results do you want to get?")
-                sortedByRank = algo.searchRank(int(rank))
-                for (rank, canteen) in sortedByRank:
-                    print("{}. {}".format(rank, canteen))
+            # Sort by rank
+            elif sort == '2':
+                canteens = algo.sortByRank(canteens)
+
+            printCanteens(canteens)
+
+
 
 
  # Updates canteen
@@ -100,16 +120,8 @@ def main():
         newcanteens = canteens
         while update != '3':
             if update == '1':
-            # Lists all canteens
-                for c in newcanteens:
-                    print("{}:".format(c['name']))
-                    print("  Coordinates - {}".format(c['coords']))
-                    print("  Rank - {}".format(c['rank']))
-                    print("  Opening hours - {}".format(c['opening_hours']))
-                    print("  Food:")
-                    for food, price in c['food'].items():
-                        print("    {0} - ${1:0.2f}".format(food, price))
-                    print()
+                # Lists all canteens
+                printCanteens()
                 break
             if update == '2':
             # Fetch a canteen and edit information
@@ -133,7 +145,7 @@ def main():
                       #  print("invalid input, try agian.")
                 canteens = newcanteens
                 db.writeFile(canteens)
-                
+
                 update = input("If you want to finish editing, input 3: ")
 
     # End program
@@ -149,8 +161,11 @@ actionMsg = "Welcome to NTU F&B Recommendations!\nWhat would you like to do?"
 actionList = ["Find a canteen (based on certain criteria)",
               "Update information about a canteen"]
 
-criteriaMsg = "What is the criteria you want to use?"
-criteriaList = ['Distance', 'Food', 'Price', 'Rank']
+searchMsg = "How would you like to filter your choices?\nChoose 'Done' when you are done."
+searchList = ['Food', 'Price', 'Done']
+
+sortMsg = "How would you like to sort your choices?"
+sortList = ['Distance', 'Rank']
 
 updateMsg = "What would you like to do?"
 updateList = ["List out all information",
