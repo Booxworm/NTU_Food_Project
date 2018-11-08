@@ -146,7 +146,9 @@ def main():
                 canteens = newcanteens
                 db.writeFile(canteens)
 
-                update = input("If you want to finish editing, input 3: ")
+                exit = input("If you want to finish editing, input 0: ")
+                if exit == '0':
+                    break
 
     # End program
     print("Thanks")
