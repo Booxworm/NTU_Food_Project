@@ -194,11 +194,8 @@ scaledSize = (int(mapSize[0]/3), int(mapSize[1]/3))
 
 # List of messages / options
 actionMsg = "Welcome to NTU F&B Recommendations!\nWhat would you like to do?"
-actionList = ["Find a canteen (based on certain criteria)",
-              "Update information about a canteen"]
-
-searchMsg = "How would you like to filter your choices?\nChoose 'Done' when you are done."
-searchList = ['Food', 'Price', 'Done']
+actionList = ["Find a canteen",
+              "Update information"]
 
 sortMsg = "How would you like to sort your choices?"
 sortList = ['Distance', 'Rank']
