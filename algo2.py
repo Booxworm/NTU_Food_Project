@@ -55,55 +55,41 @@ def mergesort(alist, key):
     right = mergesort(right, key)
     return mergeDict(left, right, key)
 
-def searchDict(dict, searchTerm, searchByKey=True):
-    """
-    Linearly searches through a dictionary, to see if the dict contains the searchTerm
-    If searchByKey flag is set, searches through keys only
-    Else searches through values only
-    Returns True if dict contains the search term, else returns False
-    """
-    # Checks if search term is a list/tuple or a single value
-    if isinstance(searchTerm, (list, tuple)):
-        searchUpper = searchTerm[0] if searchTerm[0] > searchTerm[1] else searchTerm[1]
-        searchLower = searchTerm[0] if searchTerm[0] < searchTerm[1] else searchTerm[1]
-    else:
-        searchUpper = searchLower = searchTerm
-    # Iterates through all key:value pairs
-    for k, v in dict.items():
-        if searchByKey and searchLower <= k <= searchUpper:
-            return True
-        elif not searchByKey and searchLower <= v <= searchUpper:
-            return True
-    return False
-
 def searchByFood(food, alist=db.readFile()):
     """
-    Searches through a list of canteens, and filters out the canteens which do not contain the food
-    Accepts a food name, and an optional argument list of canteens
+    Searches through a list of canteens, and filters out the canteens which do not contain any of the food
+    Accepts a list of food names, and an optional argument list of canteens
     Returns the filtered list of canteens
     """
     # Iterates through the list to filter out the items based on food
     temp = []
     for canteen in alist:
-        if searchDict(canteen['food'], food):
+        temp2 = {}
+        for k,v in canteen['food'].items():
+            if k in food:
+                temp2[k] = v
+        if len(temp2):
+            canteen['food'] = temp2
             temp.append(canteen)
     return temp
 
-def searchByPrice(price=[], alist=db.readFile()):
+def searchByPrice(lower, upper, alist=db.readFile()):
     """
-    Searches through a list of canteens, and filters out the canteens which do not contain foodwithin the price range
+    Searches through a list of canteens, and filters out the canteens which do not contain food within the price range
     Accepts a price range, and an option argument list of canteens
     Returns the filtered list of canteens
     """
-    # Iterates through the list to filter out the items based on price
+    # Iterates through the list to filter out the items based on food
+    lower = lower if lower else float('-inf')
+    upper = upper if upper else float('inf')
     temp = []
-    # Range is set to all real numbers if price is not assigned a value
-    if len(price) < 2:
-        if not len(price):
-            price.append(float("inf"))
-        price.append(float("-inf"))
     for canteen in alist:
-        if searchDict(canteen['food'], list(map(float, price)), searchByKey=False):
+        temp2 = {}
+        for k,v in canteen['food'].items():
+            if lower <= v <= upper:
+                temp2[k] = v
+        if len(temp2):
+            canteen['food'] = temp2
             temp.append(canteen)
     return temp
 

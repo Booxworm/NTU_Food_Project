@@ -88,7 +88,11 @@ def main():
                 elif search == '2':
                     priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
                     prices = priceRange.split(' ') if priceRange else []
-                    canteens = algo.searchByPrice(prices, alist=canteens)
+                    temp = algo.searchByPrice(prices, alist=canteens)
+                    if not len(temp):
+                        print("Sorry, we could not find any canteens within the specified price range\n")
+                    else:
+                        canteens = temp
 
         # Done
         else:
