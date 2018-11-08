@@ -1,5 +1,5 @@
 import gui
-import algo2 as algo
+import algo
 import db
 
 def getInput(msg, options=False):
