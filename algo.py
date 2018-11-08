@@ -38,14 +38,12 @@ def merge(leftList, rightList):
 
     return merged
 
-def mer(left, right):
-    merged=[]
-    while left[0]['xyz']<right[0]['xyz']:
-        merged.append(left[0]['xyz']
+#def mer(left, right):
+#    merged=[]
+#    while left[0]['xyz']<right[0]['xyz']:
+#        merged.append(left[0]['xyz']
 
-
-
-def mergesort(alist):
+#def mergesort(alist):
     """
     Mergesort recursively divides up the list into two, and merges the two serparate lists together
     Returns a sorted list
