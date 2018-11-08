@@ -33,7 +33,7 @@ def getInput(msg, options=False):
 def printCanteens(canteens=db.readFile()):
     """
     Prints out a list of canteens
-    Accepts an optional argument list of canteens
+    Accepts an optional argument list of canteens to print out
     """
     for c in canteens:
         print("{}:".format(c['name']))
@@ -47,14 +47,74 @@ def printCanteens(canteens=db.readFile()):
             print("    {0} - ${1:0.2f}".format(food, price))
         print()
 
+def getFood(canteens):
+    """
+    Asks user for food that user wants to eat, and filters out the canteens
+    Accepts a list of canteens
+    Returns a list of canteens
+    """
+    foodList = []
+    food = input("What food would you like to eat today?\nEnter all the food you want to eat, and enter #### when done\n")
+    while food != '####':
+        foodList.append(food)
+        food = input()
+    print()
+    for i in range(len(foodList)):
+        # Reformat the searches
+        foodList[i] = '_'.join(foodList[i].lower().split())
+    temp = algo.searchByFood(foodList, canteens)
+    if not len(temp):
+        print("Please choose some other food, we could not find your choices in any of the canteens\n")
+        return getFood(canteens)
+    else:
+        canteens = temp
+    return canteens
+
+def getPrice(canteens):
+    """
+    Asks user for upper and lower limits of price, filters out canteens based on the price range
+    Accepts a list of canteens
+    Returns a list of canteens
+    """
+    # Asks for upper limit of price
+    valid = False
+    upper = input("Enter an upper limit, or leave blank for no upper limit\n")
+    while not valid:
+        try:
+            if upper != '':
+                upper = float(upper)
+            valid = True
+        except ValueError:
+            upper = input("Invalid input, please enter a number\n")
+
+    # Asks for lower limit of price
+    valid = False
+    lower = input("Enter a lower limit, or leave blank for no lower limit\n")
+    while not valid:
+        try:
+            if lower != '':
+                lower = float(lower)
+            valid = True
+        except ValueError:
+            lower = input("Invalid input, please enter a number\n")
+    temp = algo.searchByPrice(lower, upper, alist=canteens)
+    if not len(temp):
+        print("Sorry, we could not find any canteens within the specified price range\n")
+    else:
+        print()
+        canteens = temp
+    return canteens
+
 def main():
     """
     Main function, handles user choice
     - Find a canteen based on:
-        - Distance
+        - Food
         - Price
+    - Sorts the canteens based on:
+        - Distance
         - Rank
-    - Update info of a canteen
+    - Updates info of a canteen
     """
     print()
     canteens = db.readFile()
@@ -63,52 +123,26 @@ def main():
 
     # Finds the canteen based on criteria
     if action == '1':
-        search = 0
+        # Search by food
+        canteens = getFood(canteens)
 
-        # While user is not done, continue asking for filters
-        while not search == '3':
-            search = getInput(searchMsg, searchList)
+        # Search by price
+        canteens = getPrice(canteens)
 
-            # Exits program
-            if search == str(len(searchList)+1):
-                break
+        # Sort
+        sort = getInput(sortMsg, sortList)
 
-            # Find canteen based on criteria
-            else:
-                # Search by food
-                if search == '1':
-                    food = getInput("What food would you like to eat today?")
-                    temp = algo.searchByFood('_'.join(food.lower().split()), canteens)
-                    if not len(temp):
-                        print("Are you sure you want {}? We could not find it in any of the canteens\n".format(food))
-                    else:
-                        canteens = temp
+        # Sort by distance
+        if sort == '1':
+            print("Please click your current location")
+            coords = gui.getCoordsClick(mapPath, scaledSize)
+            canteens = algo.sortByDist(coords, canteens)
 
-                # Search by price
-                elif search == '2':
-                    priceRange = getInput("Please enter a price range, separated by a space (2.50 5.00)\nIf left blank, will return all canteens sorted by price")
-                    prices = priceRange.split(' ') if priceRange else []
-                    temp = algo.searchByPrice(prices, alist=canteens)
-                    if not len(temp):
-                        print("Sorry, we could not find any canteens within the specified price range\n")
-                    else:
-                        canteens = temp
+        # Sort by rank
+        elif sort == '2':
+            canteens = algo.sortByRank(canteens)
 
-        # Done
-        else:
-            sort = getInput(sortMsg, sortList)
-
-            # Sort by distance
-            if sort == '1':
-                print("Please click your current location")
-                coords = gui.getCoordsClick(mapPath, scaledSize)
-                canteens = algo.sortByDist(coords, canteens)
-
-            # Sort by rank
-            elif sort == '2':
-                canteens = algo.sortByRank(canteens)
-
-            printCanteens(canteens)
+        printCanteens(canteens)
 
 
 
