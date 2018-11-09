@@ -61,49 +61,58 @@ def readFile():
 def updateInfo()    # Updates canteen
     finish = False
     while !finish:
-        
         update = main.getInput(updateMsg, updateList)
         canteens = readFile()
         newcanteens = canteens
-    #    while update != '3':
-            if update == '1':
-                # Lists all canteens
-                main.printCanteens()
-                break
-            if update == '2':
-            # Fetch a canteen and edit information
-                editCan = getInput(editMsg, editList)
-                #canteens[editCan-1]
-                editType = getInput(typeMsg,typeList)
-                invalidInput = True
-                while invalidInput:
-                    newstuff = input("New "+typeList[int(editType)-1]]+" for "+editList[int(editCan)-1]+":")
-                    if editType == '2': #rank
-                        if newstuff.isdigit():
-                            if 1<=int(newstuff)<=10:
-                                newcanteens[int(editCan)-1][typeList[int(editType)-1]] = int(newstuff)
-                                invalidInput = False
-                        if invalidInput == True:
-                            print("Invalid input, try again with a number 1-10.")
-                    else:
-                        newcanteens[int(editCan)-1][typeList[int(editType)-1]] = newstuff
-                        invalidInput = False
-                      #  print("invalid input, try agian.")
-                canteens = newcanteens
-                db.writeFile(canteens)
-    
-                    update = input("If you want to finish editing, input 3: ")
-                    
+        if update == '1':
+            # Lists all canteens
+            main.printCanteens()
+            continue
+        if update == '2':
+        # Fetch a canteen and edit information
+            editCan = getInput(editMsg, editList)
+            #canteens[editCan-1]
+            editType = getInput(typeMsg,typeList)
+            validInput = False
+            while !validInput:
+                print(guideline[int(editType)-1])
+                newstuff = input("New "+typeList[int(editType)-1]]+" for "+editList[int(editCan)-1]+":")
+                #no coords change available            
+                if editType == '2': #rank
+                    if newstuff.isdigit():
+                        if 1<=int(newstuff)<=10:
+                            newcanteens[int(editCan)-1][typeList[2]] = int(newstuff)
+                            validInput = True
+                            break
+                    print("Invalid input, try again with a number 1-10.")
+                elif editType == '3': #openinghours
+#                    #Need to fill up condition
+                    pass
+#                    if newstuff:
+#                        newcanteens[int(editCan)-1][typeList[3]] = newstuff
+#                        validInput = True
+#                        break
+#                    print("Invalid input, try again with ...")
+                else:
+                    print("Currently unavailable.")
+                    break
+                    #print("invalid input, try agian.")
+            writeFile(newcanteens)
+
                 
 updateMsg = "What would you like to do?"
 updateList = ["List out all information",
               "Select a canteen to update the information"]
 
 editMsg = "which canteen?"
-editList = [c['name'] for c in db.readFile()]
+editList = [c['name'] for c in readFile()]
 
 typeMsg = "Which type of info?"
 typeList = ['coords','rank','opening_hours','food']
 
+guideline = ["Sorry, you can not edit coords :(",
+             "For ranking, please input an integer between 1 and 10 :)",
+             "For opening hours, please input...",
+             "You can only add food-price pairs."]
 
 pathToFile = "./resources/db.txt"
