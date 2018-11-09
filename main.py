@@ -145,44 +145,9 @@ def main():
         printCanteens(canteens)
 
 
-
-
  # Updates canteen
     elif action == '2':
-        update = getInput(updateMsg, updateList)
-        canteens = db.readFile()
-        newcanteens = canteens
-        while update != '3':
-            if update == '1':
-                # Lists all canteens
-                printCanteens()
-                break
-            if update == '2':
-            # Fetch a canteen and edit information
-                editCan = getInput(editMsg, editList)
-                #canteens[editCan-1]
-                editType = getInput(typeMsg,typeList)
-                invalidInput = True
-                while invalidInput:
-                    #newstuff = input("New ",typeList[int(editType)-1]]," for ",editList[int(editCan)-1],":")
-                    newstuff = input("New stuff:")
-                    if editType == '2': #rank
-                        if newstuff.isdigit():
-                            if 1<=int(newstuff)<=10:
-                                newcanteens[int(editCan)-1][typeList[int(editType)-1]] = int(newstuff)
-                                invalidInput = False
-                        if invalidInput == True:
-                            print("Invalid input, try again with a number 1-10.")
-                    else:
-                        newcanteens[int(editCan)-1][typeList[int(editType)-1]] = newstuff
-                        invalidInput = False
-                      #  print("invalid input, try agian.")
-                canteens = newcanteens
-                db.writeFile(canteens)
-
-                exit = input("If you want to finish editing, input 0: ")
-                if exit == '0':
-                    break
+        db.updateInfo()
 
     # End program
     print("Thanks")
@@ -203,12 +168,12 @@ sortList = ['Distance', 'Rank']
 updateMsg = "What would you like to do?"
 updateList = ["List out all information",
               "Select a canteen to update the information"]
-
-editMsg = "which canteen?"
-editList = [c['name'] for c in db.readFile()]
-
-typeMsg = "Which type of info?"
-typeList = ['coords','rank','opening_hours','food']
+#
+#editMsg = "which canteen?"
+#editList = [c['name'] for c in db.readFile()]
+#
+#typeMsg = "Which type of info?"
+#typeList = ['coords','rank','opening_hours','food']
 
 if __name__ == '__main__':
     main()

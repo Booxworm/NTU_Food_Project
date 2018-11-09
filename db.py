@@ -1,3 +1,4 @@
+import main
 def writeFile(canData):
     """
     Writes data of canteens to file
@@ -56,5 +57,53 @@ def readFile():
             c['food'].update(newList)
             canteens.append(c)
     return canteens
+
+def updateInfo()    # Updates canteen
+    finish = False
+    while !finish:
+        
+        update = main.getInput(updateMsg, updateList)
+        canteens = readFile()
+        newcanteens = canteens
+    #    while update != '3':
+            if update == '1':
+                # Lists all canteens
+                main.printCanteens()
+                break
+            if update == '2':
+            # Fetch a canteen and edit information
+                editCan = getInput(editMsg, editList)
+                #canteens[editCan-1]
+                editType = getInput(typeMsg,typeList)
+                invalidInput = True
+                while invalidInput:
+                    newstuff = input("New "+typeList[int(editType)-1]]+" for "+editList[int(editCan)-1]+":")
+                    if editType == '2': #rank
+                        if newstuff.isdigit():
+                            if 1<=int(newstuff)<=10:
+                                newcanteens[int(editCan)-1][typeList[int(editType)-1]] = int(newstuff)
+                                invalidInput = False
+                        if invalidInput == True:
+                            print("Invalid input, try again with a number 1-10.")
+                    else:
+                        newcanteens[int(editCan)-1][typeList[int(editType)-1]] = newstuff
+                        invalidInput = False
+                      #  print("invalid input, try agian.")
+                canteens = newcanteens
+                db.writeFile(canteens)
+    
+                    update = input("If you want to finish editing, input 3: ")
+                    
+                
+updateMsg = "What would you like to do?"
+updateList = ["List out all information",
+              "Select a canteen to update the information"]
+
+editMsg = "which canteen?"
+editList = [c['name'] for c in db.readFile()]
+
+typeMsg = "Which type of info?"
+typeList = ['coords','rank','opening_hours','food']
+
 
 pathToFile = "./resources/db.txt"
