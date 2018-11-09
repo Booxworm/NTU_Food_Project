@@ -54,6 +54,8 @@ def getFood(canteens):
     Returns a list of canteens
     """
     foodList = []
+
+    # Gets list of food from user
     food = input("What food would you like to eat today?\nEnter all the food you want to eat, and enter #### when done\n")
     while food != '####':
         foodList.append(food)
@@ -62,7 +64,11 @@ def getFood(canteens):
     for i in range(len(foodList)):
         # Reformat the searches
         foodList[i] = ''.join(foodList[i].lower().split())
+
+    # Searches for the food
     temp = algo.searchByFood(foodList, canteens)
+
+    # Choice not found
     if not len(temp):
         print("Please choose some other food, we could not find your choices in any of the canteens\n")
         return getFood(canteens)
@@ -97,6 +103,8 @@ def getPrice(canteens):
             valid = True
         except ValueError:
             lower = input("Invalid input, please enter a number\n")
+
+    # Checks if price is valid for foods chosen
     temp = algo.searchByPrice(lower, upper, alist=canteens)
     if not len(temp):
         print("Sorry, we could not find any canteens within the specified price range\n")
@@ -144,13 +152,50 @@ def main():
 
         printCanteens(canteens)
 
-
- # Updates canteen
+    # Updates canteen
     elif action == '2':
-        db.updateInfo()
+        finish = False
+        while not finish:
+            update = getInput(updateMsg, updateList)
+            canteens = db.readFile()
+            newcanteens = canteens
+            if update == '1':
+                # Lists all canteens
+                printCanteens()
+                continue
+            if update == '2':
+            # Fetch a canteen and edit information
+                editCan = getInput(editMsg, editList)
+                #canteens[editCan-1]
+                editType = getInput(typeMsg,typeList)
+                validInput = False
+                while not validInput:
+                    print(guideline[int(editType)-1])
+                    newstuff = input("New "+typeList[int(editType)-1]+" for "+editList[int(editCan)-1]+":")
+                    #no coords change available
+                    if editType == '2': #rank
+                        if newstuff.isdigit():
+                            if 1<=int(newstuff)<=10:
+                                newcanteens[int(editCan)-1][typeList[2]] = int(newstuff)
+                                validInput = True
+                                break
+                        print("Invalid input, try again with a number 1-10.")
+                    elif editType == '3': #openinghours
+                        #Need to fill up condition
+                        pass
+                        # if newstuff:
+                        #     newcanteens[int(editCan)-1][typeList[3]] = newstuff
+                        #     validInput = True
+                        #     break
+                        # print("Invalid input, try again with ...")
+                    else:
+                        print("Currently unavailable.")
+                        break
+                        #print("invalid input, try agian.")
+                db.writeFile(newcanteens)
 
     # End program
-    print("Thanks")
+    print("Thanks for using our app")
 
 # Image of map of NTU
 mapPath = "./resources/ntuMap.jpeg"
@@ -168,12 +213,17 @@ sortList = ['Distance', 'Rank']
 updateMsg = "What would you like to do?"
 updateList = ["List out all information",
               "Select a canteen to update the information"]
-#
-#editMsg = "which canteen?"
-#editList = [c['name'] for c in db.readFile()]
-#
-#typeMsg = "Which type of info?"
-#typeList = ['coords','rank','opening_hours','food']
+
+editMsg = "which canteen?"
+editList = [c['name'] for c in db.readFile()]
+
+typeMsg = "Which type of info?"
+typeList = ['coords','rank','opening_hours','food']
+
+guideline = ["Sorry, you can not edit coords :(",
+             "For ranking, please input an integer between 1 and 10 :)",
+             "For opening hours, please input...",
+             "You can only add food-price pairs."]
 
 if __name__ == '__main__':
     main()
