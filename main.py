@@ -61,7 +61,7 @@ def getFood(canteens):
     print()
     for i in range(len(foodList)):
         # Reformat the searches
-        foodList[i] = '_'.join(foodList[i].lower().split())
+        foodList[i] = ''.join(foodList[i].lower().split())
     temp = algo.searchByFood(foodList, canteens)
     if not len(temp):
         print("Please choose some other food, we could not find your choices in any of the canteens\n")

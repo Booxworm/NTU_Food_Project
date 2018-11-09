@@ -1,5 +1,5 @@
 # Importing functions from python-telegram-bot
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
+from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler)
 import logging
 
@@ -17,7 +17,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-CHOICE, FOOD, UPPER, LOWER, DIST, RANK = range(6)
+CHOICE, FOOD, UPPER, LOWER, DIST = range(5)
 
 def start(bot, update, user_data):
     user_data.clear()
@@ -35,17 +35,20 @@ def choice(bot, update, user_data):
     # Checks if user wants to find a canteen
     if msg == main.actionList[0]:
         update.message.reply_text(
-            "Please enter the food you want to eat. Press /done when you are finished")
+            "Please enter the food you want to eat. Press /done when you are finished",
+            reply_markup=ReplyKeyboardRemove())
         return FOOD
 
     # Checks if user wants to update a canteen
     elif msg == main.actionList[1]:
-        main.updateCanteen(None, None)
         return ConversationHandler.END
 
     # Sort by distance
     elif msg == main.sortList[0]:
-        update.message.reply_text("Send me your location, so I can help you find the nearest canteens")
+        update.message.reply_text("Send me your location, so I can help you find the nearest canteens. If you decide to search by rank instead, click /change",
+            reply_markup=ReplyKeyboardMarkup(
+                [[KeyboardButton(text="Send Location", request_location=True)]],
+                one_time_keyboard=True))
         return DIST
 
     # Sort by rank
@@ -57,7 +60,7 @@ def choice(bot, update, user_data):
 def food(bot, update, user_data):
     user = update.message.from_user
     msg = update.message.text
-    msg = '_'.join(msg.lower().split())
+    msg = ''.join(msg.lower().split())
     logger.info("Adding {} to {}'s list".format(msg, user.first_name))
 
     # Appends food to food list
@@ -73,13 +76,15 @@ def foodDone(bot, update, user_data):
         update.message.reply_text("Please go choose a food before typing /done")
         return FOOD
 
-    logger.info("{}'s list contains {}".format(user.first_name, user_data['foodList']))
+    logger.info("Adding to list")
 
     user_data['canteens'] = algo.searchByFood(user_data['foodList'])
     if not len(user_data['canteens']):
+        user_data['foodList'] = []
         update.message.reply_text("Sorry, looks like the food you chose cannot be found. Please choose again. Type /done when finished")
         return FOOD
     else:
+        logger.info("{}'s list contains {}".format(user.first_name, user_data['foodList']))
         update.message.reply_text('Okay now choose an upper price range')
         return UPPER
 
@@ -131,26 +136,31 @@ def dist(bot, update, user_data):
     loc = update.message.location
     logger.info("Location of {}: {} / {}".format(user.first_name, loc.latitude,
                 loc.longitude))
-    update.message.reply_text('Alright, give me some time while I find the nearest canteens...')
+    update.message.reply_text('Give me some time while I find the nearest canteens...',
+        reply_markup=ReplyKeyboardRemove())
 
     latlong = loc.latitude, loc.longitude
     user_data['canteens'] = algo.sortByDist(latlong, user_data['canteens'])
 
     logger.info(user_data['canteens'])
     sendCanteens(update, user_data['canteens'])
-    update.message.reply_text("Thanks for using our bot!")
-    return ConversationHandler.END
+    return exit(bot, update)
+
+def distChange(bot, update, user_data):
+    logger.info("Changing to rank")
+    update.message.reply_text("Since you dont want to sort by distance, I'll sort it by rank instead")
+    return rank(bot, update, user_data)
 
 def rank(bot, update, user_data):
     msg = update.message.text
 
-    update.message.reply_text('Alright, give me some time while I find the best canteens...')
+    update.message.reply_text(
+        'Give me some time while I find the best canteens...',
+        reply_markup=ReplyKeyboardRemove())
     user_data['canteens'] = algo.sortByRank(user_data['canteens'])
     logger.info(user_data['canteens'])
     sendCanteens(update, user_data['canteens'])
-    update.message.reply_text("Thanks for using our bot!")
-
-    return ConversationHandler.END
+    return exit(bot, update)
 
 def sendCanteens(update, canteens):
     """
@@ -171,10 +181,10 @@ def sendCanteens(update, canteens):
         msg += "\n"
     update.message.reply_text(msg)
 
-def cancel(bot, update):
+def exit(bot, update):
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
-    update.message.reply_text('Bye! I hope we can talk again some day.',
+    update.message.reply_text('Thanks for trying our bot!',
                               reply_markup=ReplyKeyboardRemove())
 
     return ConversationHandler.END
@@ -213,10 +223,12 @@ def tMain():
                     pass_user_data=True)],
 
             DIST: [MessageHandler(Filters.location, dist,
+                   pass_user_data=True),
+                   CommandHandler('change', distChange,
                    pass_user_data=True)]
         },
 
-        fallbacks=[CommandHandler('cancel', cancel)]
+        fallbacks=[CommandHandler('exit', exit)]
     )
 
     dp.add_handler(conv_handler)

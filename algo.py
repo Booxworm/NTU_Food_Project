@@ -66,7 +66,7 @@ def searchByFood(food, alist=db.readFile()):
     for canteen in alist:
         temp2 = {}
         for k,v in canteen['food'].items():
-            if k in food:
+            if ''.join(k.split('_')) in food:
                 temp2[k] = v
         if len(temp2):
             canteen['food'] = temp2
