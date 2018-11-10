@@ -1,31 +1,25 @@
 import googlemaps
-from datetime import datetime
 
-gmaps = googlemaps.Client(key='Add Your Key here')
-
-# Geocoding an address
-geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
-
-# Look up an address with reverse geocoding
-reverse_geocode_result = gmaps.reverse_geocode((40.714224, -73.961452))
-
-# Request directions via public transit
-now = datetime.now()
-directions_result = gmaps.directions("Sydney Town Hall",
-                                     "Parramatta, NSW",
-                                     mode="transit",
-                                     departure_time=now)
-gmaps = googlemaps.Client(client_id=client_id, client_secret=client_secret)
-
-# Geocoding and address
-geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
-
-# Look up an address with reverse geocoding
-reverse_geocode_result = gmaps.reverse_geocode((40.714224, -73.961452))
-
-# Request directions via public transit
-now = datetime.now()
-directions_result = gmaps.directions("Sydney Town Hall",
-                                     "Parramatta, NSW",
-                                     mode="transit",
-                                     departure_time=now)
+                                     
+#lat and lon of the mouse click
+import arcpy  
+import pythonaddins  
+      
+class XYTool(object):  
+  """Implementation for xy_addin.XYTool (Tool)"""  
+     def __init__(self):  
+            self.enabled = True  
+            self.cursor=3  
+     def onMouseDownMap(self, x, y, button, shift):  
+              
+            mxd=arcpy.mapping.MapDocument("current")  
+            df = arcpy.mapping.ListDataFrames(mxd)[0]  
+            pt=arcpy.PointGeometry(arcpy.Point(x,y))  
+            #ptfeat=arcpy.management.CopyFeatures(pt,r"in_memory\pt")  
+            print x,y  
+            pythonaddins.MessageBox(str(x) + ", " + str(y), 'Coordinates', 0)  
+                                     
+                                     
+                                     
+                                     
+                                     
