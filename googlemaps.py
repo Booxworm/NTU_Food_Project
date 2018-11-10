@@ -24,7 +24,7 @@ class XYTool(object):
 
 # approximate radius of earth in km
 R = 6373.0
-#lat and lon of each canteen
+"""lat and lon of each canteen
 can1=(1.346763,103.686018)
 can2=(1.348434,103.685535)
 can9=(1.352515,103.685760)
@@ -34,7 +34,7 @@ can14=(1.352961,103.682432)
 can16=(1.350618,103.681652)
 koufu=(1.342642,103.682791)
 NS=(1.347243,103.680236)
-quad=(1.345193,103.680549)
+quad=(1.345193,103.680549)"""
 
 lat=[]
 lat[0]=1.346763
