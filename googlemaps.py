@@ -60,23 +60,23 @@ lon[7]=103.682791
 lon[8]=103.680236
 lon[9]=103.680549
 
-for i in range(10)
+for i in range(10):
 
-lat1 = radians(lat[i])
-lon1 = radians(lon[i])
-lat2 = radians(x)
-lon2 = radians(y)
+   lat1 = radians(lat[i])
+   lon1 = radians(lon[i])
+   lat2 = radians(x)
+   lon2 = radians(y)
 
-#dist between the user loc and each canteen
-dlon = lon2 - lon1
-dlat = lat2 - lat1
+   #dist between the user loc and each canteen
+   dlon = lon2 - lon1
+   dlat = lat2 - lat1
 
-a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-c = 2 * atan2(sqrt(a), sqrt(1 - a))
+   a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+   c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-distance = R * c
+   distance = R * c
 
-print("Result:", distance)
+   print("Result:", distance)
                                      
                                      
                                      
