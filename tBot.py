@@ -17,9 +17,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-CHOICE, FOOD, UPPER, LOWER, DIST = range(5)
+CHOICE, FOOD, PRICE, DIST = range(4)
 
 def start(bot, update, user_data):
+    """
+    Start state of bot
+    Asks if the user wants to list out all canteens
+    Sends user to CHOICE state
+    """
     user_data.clear()
     update.message.reply_text(
         main.actionMsg,
@@ -28,6 +33,10 @@ def start(bot, update, user_data):
 
 
 def choice(bot, update, user_data):
+    """
+    Handles users choices
+    Returns various states depending on user choice
+    """
     user = update.message.from_user
     msg = update.message.text
     logger.info("Action of {}: {}".format(user.first_name, msg))
@@ -55,6 +64,10 @@ def choice(bot, update, user_data):
     return ConversationHandler.END
 
 def food(bot, update, user_data):
+    """
+    Adds new food to foodList
+    Returns back to FOOD state once added
+    """
     user = update.message.from_user
     msg = update.message.text
     msg = ''.join(msg.lower().split())
@@ -67,6 +80,12 @@ def food(bot, update, user_data):
     return FOOD
 
 def foodDone(bot, update, user_data):
+    """
+    User done with choosing food
+    Checks if food chosen is in the database
+    If yes, sends user to PRICE state
+    Else, sends user back to FOOD state
+    """
     user = update.message.from_user
 
     if 'foodList' not in user_data:
@@ -74,7 +93,7 @@ def foodDone(bot, update, user_data):
         logger.info("{}'s list contains everything!".format(user.first_name))
         update.message.reply_text('Okay now choose an upper price range')
         user_data['canteens'] = db.readFile()
-        return UPPER
+        return PRICE
 
     logger.info("Adding to list")
 
@@ -88,23 +107,11 @@ def foodDone(bot, update, user_data):
         update.message.reply_text('Okay now choose an upper price range')
         return UPPER
 
-def upper(bot, update, user_data):
-    user = update.message.from_user
-    msg = update.message.text
-
-    try:
-        if msg == '': msg = 'inf'
-        msg = float(msg)
-        logger.info("{} chose {}".format(user.first_name, msg))
-        user_data['upper'] = msg
-        update.message.reply_text("Choose a lower price range")
-        return LOWER
-    except ValueError:
-        update.message.reply_text("Sorry that is not a valid input, please enter a number")
-        return UPPER
-
-
-def lower(bot, update, user_data):
+def price(bot, update, user_data):
+    """
+    Lets users choose upper limit of price
+    Sends user to CHOICE state, where they will choose either to be sorted by distance or rank
+    """
     user = update.message.from_user
     msg = update.message.text
 
@@ -112,14 +119,13 @@ def lower(bot, update, user_data):
         if msg == '': msg = '-inf'
         msg = float(msg)
         logger.info("{} chose {}".format(user.first_name, msg))
-        user_data['lower'] = msg
+        user_data['upper'] = msg
         temp = algo.searchByPrice(
-            user_data['lower'],
             user_data['upper'],
             user_data['canteens'])
         if not len(temp):
             update.message.reply_text("No food within that price range, please choose an upper price range again")
-            return UPPER
+            return PRICE
         else:
             user_data['canteens'] = temp
             update.message.reply_text(
@@ -132,6 +138,10 @@ def lower(bot, update, user_data):
         return LOWER
 
 def dist(bot, update, user_data):
+    """
+    Extracts the latitude and longtitude
+    Sorts the canteens by distance
+    """
     user = update.message.from_user
     loc = update.message.location
     logger.info("Location of {}: {} / {}".format(user.first_name, loc.latitude,
@@ -147,11 +157,18 @@ def dist(bot, update, user_data):
     return exit(bot, update)
 
 def distChange(bot, update, user_data):
+    """
+    User decides to change from distance to rank
+    Redirects the user to sort by rank
+    """
     logger.info("Changing to rank")
     update.message.reply_text("Since you dont want to sort by distance, I'll sort it by rank instead")
     return rank(bot, update, user_data)
 
 def rank(bot, update, user_data):
+    """
+    Sorts the canteens by rank
+    """
     msg = update.message.text
 
     update.message.reply_text(
@@ -163,6 +180,10 @@ def rank(bot, update, user_data):
     return exit(bot, update)
 
 def exit(bot, update):
+    """
+    User has finished or cancelled the convo
+    Ends the Conversation
+    """
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
     update.message.reply_text('Thanks for trying our bot!',
@@ -172,11 +193,17 @@ def exit(bot, update):
 
 
 def error(bot, update, error):
-    """Log Errors caused by Updates."""
+    """
+    Log Errors caused by Updates
+    """
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
 def tMain():
+    """
+    Main function for telegram bot
+    Contains all the states and conditions to move to next state
+    """
     # Create the EventHandler and pass it your bot's token.
     updater = Updater(API_KEY)
 
@@ -197,10 +224,7 @@ def tMain():
                    CommandHandler('done', foodDone,
                    pass_user_data=True)],
 
-            UPPER: [MessageHandler(Filters.text, upper,
-                    pass_user_data=True)],
-
-            LOWER: [MessageHandler(Filters.text, lower,
+            PRICE: [MessageHandler(Filters.text, price,
                     pass_user_data=True)],
 
             DIST: [MessageHandler(Filters.location, dist,

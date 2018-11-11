@@ -42,8 +42,8 @@ def getFood(canteens):
     foodList = []
 
     # Gets list of food from user
-    food = input("What food would you like to eat today?\nEnter all the food you want to eat, and enter #### when done\nIf empty, will take all foods\n")
-    while food != '####':
+    food = input("What food would you like to eat today?\nEnter all the food you want to eat, and press enter again when done\nIf empty, will take all foods\n")
+    while food != '':
         foodList.append(food)
         food = input()
     print()
@@ -70,7 +70,7 @@ def getFood(canteens):
 
 def getPrice(canteens):
     """
-    Asks user for upper and lower limits of price, filters out canteens based on the price range
+    Asks user for upper limits of price, filters out canteens based on the price range
     Accepts a list of canteens
     Returns a list of canteens
     """
@@ -85,19 +85,8 @@ def getPrice(canteens):
         except ValueError:
             upper = input("Invalid input, please enter a number\n")
 
-    # Asks for lower limit of price
-    valid = False
-    lower = input("Enter a lower limit, or leave blank for no lower limit\n")
-    while not valid:
-        try:
-            if lower != '':
-                lower = float(lower)
-            valid = True
-        except ValueError:
-            lower = input("Invalid input, please enter a number\n")
-
     # Checks if price is valid for foods chosen
-    temp = algo.searchByPrice(lower, upper, alist=canteens)
+    temp = algo.searchByPrice(upper, alist=canteens)
     if not len(temp):
         print("Sorry, we could not find any canteens within the specified price range\n")
     else:
@@ -130,24 +119,19 @@ def main():
         canteens = getPrice(canteens)
 
         # Sort
-        sort = getInput(sortMsg, sortList)
+        sort = getInput(sortMsg, sortList, exit=False)
 
-        # Exits
-        if int(sort) == len(sortList) + 1:
-            pass
+        # Sort by distance
+        if sort == '1':
+            print("Please click your current location")
+            coords = gui.getCoordsClick(mapPath, scaledSize)
+            canteens = algo.sortByDist(coords, canteens, False)
 
-        else:
-            # Sort by distance
-            if sort == '1':
-                print("Please click your current location")
-                coords = gui.getCoordsClick(mapPath, scaledSize)
-                canteens = algo.sortByDist(coords, canteens, False)
+        # Sort by rank
+        elif sort == '2':
+            canteens = algo.sortByRank(canteens)
 
-            # Sort by rank
-            elif sort == '2':
-                canteens = algo.sortByRank(canteens)
-
-            print(algo.formatCanteens(canteens))
+        print(algo.formatCanteens(canteens))
 
     # Updates canteen
     elif action == '2':

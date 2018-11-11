@@ -97,20 +97,19 @@ def searchByFood(food, alist=db.readFile()):
             temp.append(canteen)
     return temp
 
-def searchByPrice(lower, upper, alist=db.readFile()):
+def searchByPrice(upper, alist=db.readFile()):
     """
     Searches through a list of canteens, and filters out the canteens which do not contain food within the price range
-    Accepts a price range, and an option argument list of canteens
+    Accepts an upper limit, and an option argument list of canteens
     Returns the filtered list of canteens
     """
     # Iterates through the list to filter out the items based on food
-    lower = lower if lower else float('-inf')
     upper = upper if upper else float('inf')
     temp = []
     for canteen in alist:
         temp2 = {}
         for k,v in canteen['food'].items():
-            if lower <= v <= upper:
+            if v <= upper:
                 temp2[k] = v
         if len(temp2):
             canteen['food'] = temp2
