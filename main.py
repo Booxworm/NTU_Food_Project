@@ -185,42 +185,61 @@ def main():
                 while not validInput:
                     # Prints out specific guidelines for the property that the user is trying to update
                     print(guideline[type])
-                    newStuff = input("New {} for {}:".format(type, editList[canIndex]))
-                    print()
 
                     # Edit rank
                     if type == 'Edit rank':
-                        if newStuff.isdigit() and 1 <= int(newStuff) <= 10:
-                            newCanteens[canIndex]['rank'] = int(newStuff)
+                        rank = input("New rank for {}: ".format(editList[canIndex]))
+                        if rank.isdigit() and 1 <= int(rank) <= 10:
+                            newCanteens[canIndex]['rank'] = int(rank)
                             validInput = True
                         else:
                             print("Invalid input, try again with a number 1-10.\n")
 
                     # Add food
                     elif type == 'Add food':
-                        food, price = newStuff.split(':')
+                        food = input("New food for {}: ".format(editList[canIndex]))
+                        price = input("New price for {}: ".format(food))
+                        print()
                         try:
                             # Format food
                             food = '_'.join(food.lower().split())
+                            if food in newCanteens[canIndex]['food']:
+                                print("{} is already in the list of foods\n".format(food))
 
+                            else:
+                                # Check if price is a positive float
+                                if float(price) < 0:
+                                    raise ValueError
+
+                                # Assigns new price
+                                newCanteens[canIndex]['food'][food] = float(price)
+                                validInput = True
+                        except ValueError:
+                            print("Invalid input, please try again")
+
+                    # Remove food
+                    elif type == 'Remove food':
+                        foodList = list(newCanteens[canIndex]['food'].keys())
+                        index = int(getInput("Select food to remove", foodList, exit=False)) - 1
+                        newCanteens[canIndex]['food'].pop(foodList[index])
+                        validInput = True
+
+                    # Edit food/price
+                    elif type == 'Edit food/price':
+                        foodList = list(newCanteens[canIndex]['food'].keys())
+                        index = int(getInput("Select food to edit", foodList, exit=False)) - 1
+                        price = input("Select new price for {}: ".format(foodList[index]))
+                        print()
+                        try:
                             # Check if price is a positive float
                             if float(price) < 0:
                                 raise ValueError
 
                             # Assigns new price
-                            newCanteens[canIndex]['food'][food] = float(price)
+                            newCanteens[canIndex]['food'][foodList[index]] = float(price)
                             validInput = True
                         except ValueError:
-                            print("Invalid input, try again with this format: <food>:<price>")
-
-                    # Remove food
-                    elif type == 'Remove food':
-                        pass
-
-                    # Edit food/price
-                    elif type == 'Edit food/price':
-                        foodList = list(newCanteens[canIndex]['food'].keys())
-                        getInput("", foodList, exit=False)
+                            print("Invalid input, try again with price as a positive number")
 
                     else:
                         print("Currently unavailable.")
@@ -254,9 +273,10 @@ typeMsg = "Which type of info?"
 typeList = ['Edit rank', 'Add food', 'Remove food', 'Edit food/price']
 
 guideline = {
-    'rank'          : "For ranking, please input an integer between 1 and 10 :)",
-    'food'          : "You can only add food-price pairs.",
-    'price'         : "Which of these foods do you want to edit?\nUse the format <food>:<price>\nEg: chicken rice:4"
+    'Edit rank'         : "For ranking, please input an integer between 1 and 10 :)",
+    'Add food'          : "Type in a new food, and a price",
+    'Remove food'       : "Select one of the foods",
+    'Edit food/price'   : "Which of these foods do you want to edit?"
 }
 
 if __name__ == '__main__':

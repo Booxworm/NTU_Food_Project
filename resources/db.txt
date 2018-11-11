@@ -1,10 +1,10 @@
-can1 291,311 1.346763,103.686018 1 cai_fan:3.0,western:5.0,japanese:5.0,food:5125.0,salmon:5.0
+can1 291,311 1.346763,103.686018 1 cai_fan:3.0,western:5.0,japanese:5.0,salmon:5.0,spicy_noodles:4.0
 can2 271,264 1.348434,103.685535 2 ayam_penyet:5.0,western:5.0,xiao_long_bao:4.3,cai_fan:3.0
-can9 279,141 1.352515,103.68576 3 mala:5.0
+can9 279,141 1.352515,103.68576 3 mala:56.0
 can11 303,68 1.355156,103.686944 5 cai_fan:2.8,waffles:2.0
 can13 144,162 1.351925,103.681628 5 western:5.0,japanese:4.0
 can14 178,126 1.352961,103.682432 6 ban_mian:4.0,cai_fan:3.0
 can16 142,199 1.350618,103.681652 7 cai_fan:3.0,chicken_rice:3.0
 canA 113,298 1.347243,103.680236 8 western:4.8,cai_fan:3.0,ban_mian:3.5
 canB 178,431 1.342642,103.682791 9 ban_mian:4.0,vegetarian:2.5
-quadCafe 104,362 1.345193,103.680549 10 mala:4.0,western:5.0
+quadCafe 104,362 1.345193,103.680549 10 mala:4.0,western:5.0,wanton_mee:7.0
