@@ -140,47 +140,72 @@ def main():
         # Sort
         sort = getInput(sortMsg, sortList)
 
-        # Sort by distance
-        if sort == '1':
-            print("Please click your current location")
-            coords = gui.getCoordsClick(mapPath, scaledSize)
-            canteens = algo.sortByDist(coords, canteens)
+        # Exits
+        if int(sort) == len(sortList) + 1:
+            pass
 
-        # Sort by rank
-        elif sort == '2':
-            canteens = algo.sortByRank(canteens)
+        else:
+            # Sort by distance
+            if sort == '1':
+                print("Please click your current location")
+                coords = gui.getCoordsClick(mapPath, scaledSize)
+                canteens = algo.sortByDist(coords, canteens)
 
-        printCanteens(canteens)
+            # Sort by rank
+            elif sort == '2':
+                canteens = algo.sortByRank(canteens)
+
+            printCanteens(canteens)
 
     # Updates canteen
     elif action == '2':
         finish = False
         while not finish:
+            # Asks user what he wants to do
             update = getInput(updateMsg, updateList)
             canteens = db.readFile()
             newcanteens = canteens
-            if update == '1':
-                # Lists all canteens
+
+            # Exit
+            if int(update) == len(updateList) + 1:
+                finish = True
+
+            # Lists all canteens
+            elif update == '1':
                 printCanteens()
                 continue
-            if update == '2':
+
             # Fetch a canteen and edit information
+            elif update == '2':
+                # Asks user which canteen to update, or exits
                 editCan = getInput(editMsg, editList)
-                #canteens[editCan-1]
+                if int(editCan) == len(editList) + 1:
+                    break
+                canIndex = int(editCan) - 1
+
+                # Asks user which property to update, or exits
                 editType = getInput(typeMsg,typeList)
+                if int(editType) == len(typeList) + 1:
+                    break
+                type = typeList[int(editType) - 1]
+
                 validInput = False
                 while not validInput:
-                    print(guideline[int(editType)-1])
-                    newstuff = input("New "+typeList[int(editType)-1]+" for "+editList[int(editCan)-1]+":")
-                    #no coords change available
-                    if editType == '2': #rank
-                        if newstuff.isdigit():
-                            if 1<=int(newstuff)<=10:
-                                newcanteens[int(editCan)-1][typeList[2]] = int(newstuff)
-                                validInput = True
-                                break
-                        print("Invalid input, try again with a number 1-10.")
-                    elif editType == '3': #openinghours
+                    # Prints out specific guidelines for the property that the user is trying to update
+                    print(guideline[type])
+                    newstuff = input("New {} for {}:".format(type, editList[canIndex]))
+                    print()
+
+                    # Update rank
+                    if type == 'rank':
+                        if newstuff.isdigit() and 1 <= int(newstuff) <= 10:
+                            newcanteens[canIndex][type] = int(newstuff)
+                            validInput = True
+                        else:
+                            print("Invalid input, try again with a number 1-10.\n")
+
+                    # Opening hours
+                    elif editType == '2':
                         #Need to fill up condition
                         pass
                         # if newstuff:
@@ -188,6 +213,10 @@ def main():
                         #     validInput = True
                         #     break
                         # print("Invalid input, try again with ...")
+
+                    # Exit
+                    elif editType == '4':
+                        validInput = True
                     else:
                         print("Currently unavailable.")
                         break
@@ -218,12 +247,13 @@ editMsg = "which canteen?"
 editList = [c['name'] for c in db.readFile()]
 
 typeMsg = "Which type of info?"
-typeList = ['coords','rank','opening_hours','food']
+typeList = ['rank','opening_hours','food']
 
-guideline = ["Sorry, you can not edit coords :(",
-             "For ranking, please input an integer between 1 and 10 :)",
-             "For opening hours, please input...",
-             "You can only add food-price pairs."]
+guideline = {
+    'rank'          : "For ranking, please input an integer between 1 and 10 :)",
+    'opening_hours' : "For opening hours, please input...",
+    'food'          : "You can only add food-price pairs."
+}
 
 if __name__ == '__main__':
     main()
