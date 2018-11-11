@@ -14,11 +14,13 @@ def writeFile(canData):
             foodList = []
             for food, price in c['food'].items():
                 foodList.append("{}:{}".format(food,price))
-            f.write("{} {},{} {} {},{} {}\n".format(c['name'],
+            f.write("{} {},{} {} {},{} {} {},{}\n".format(c['name'],
                                                  c['coords'][0],c['coords'][1],
                                                  c['rank'],
+                                                 
                                                  c['opening_hours'][0],c['opening_hours'][1],
-                                                 ','.join(foodList)))
+                                                 ','.join(foodList),
+                                                 c['loc'][0],c['loc'][1]  ))
 
 def readFile():
     """
@@ -45,9 +47,12 @@ def readFile():
             c['name'] = data[0]
             c['coords'] = tuple(map(int,data[1].split(',')))
             c['rank'] = int(data[2])
+            
             c['opening_hours'] = tuple(data[3].split(','))
             c['food'] = {}
             foodList = data[4].split(',')
+            c['loc'] = tuple(map(float,data[5].split(',')))
+            
             newList = []
             for foodPair in foodList:
                 foodPair = foodPair.split(':')
