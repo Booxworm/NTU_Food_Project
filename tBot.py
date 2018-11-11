@@ -23,7 +23,7 @@ def start(bot, update, user_data):
     user_data.clear()
     update.message.reply_text(
         main.actionMsg,
-        reply_markup=ReplyKeyboardMarkup([[action] for action in main.actionList], one_time_keyboard=True))
+        reply_markup=ReplyKeyboardMarkup([[main.actionList[0]]], one_time_keyboard=True, resize_keyboard=True))
     return CHOICE
 
 
@@ -35,20 +35,17 @@ def choice(bot, update, user_data):
     # Checks if user wants to find a canteen
     if msg == main.actionList[0]:
         update.message.reply_text(
-            "Please enter the food you want to eat. Press /done when you are finished",
+            "Please enter the food you want to eat. Press /done when you are finished. If left empty, will return all foods.",
             reply_markup=ReplyKeyboardRemove())
         return FOOD
-
-    # Checks if user wants to update a canteen
-    elif msg == main.actionList[1]:
-        return ConversationHandler.END
 
     # Sort by distance
     elif msg == main.sortList[0]:
         update.message.reply_text("Send me your location, so I can help you find the nearest canteens. If you decide to search by rank instead, click /change",
             reply_markup=ReplyKeyboardMarkup(
                 [[KeyboardButton(text="Send Location", request_location=True)]],
-                one_time_keyboard=True))
+                one_time_keyboard=True,
+                resize_keyboard=True))
         return DIST
 
     # Sort by rank
@@ -73,8 +70,11 @@ def foodDone(bot, update, user_data):
     user = update.message.from_user
 
     if 'foodList' not in user_data:
-        update.message.reply_text("Please go choose a food before typing /done")
-        return FOOD
+        update.message.reply_text("You did not input anything, so there will be no filter on the food")
+        logger.info("{}'s list contains everything!".format(user.first_name))
+        update.message.reply_text('Okay now choose an upper price range')
+        user_data['canteens'] = db.readFile()
+        return UPPER
 
     logger.info("Adding to list")
 
@@ -124,7 +124,7 @@ def lower(bot, update, user_data):
             user_data['canteens'] = temp
             update.message.reply_text(
                 main.sortMsg,
-                reply_markup=ReplyKeyboardMarkup([[sort] for sort in main.sortList], one_time_keyboard=True))
+                reply_markup=ReplyKeyboardMarkup([[sort] for sort in main.sortList], one_time_keyboard=True, resize_keyboard=True))
             return CHOICE
 
     except ValueError:
@@ -140,10 +140,10 @@ def dist(bot, update, user_data):
         reply_markup=ReplyKeyboardRemove())
 
     latlong = loc.latitude, loc.longitude
-    user_data['canteens'] = algo.sortByDist(latlong, user_data['canteens'])
+    user_data['canteens'] = algo.sortByDist(latlong, user_data['canteens'], True)
 
     logger.info(user_data['canteens'])
-    sendCanteens(update, user_data['canteens'])
+    update.message.reply_text(algo.formatCanteens(user_data['canteens']))
     return exit(bot, update)
 
 def distChange(bot, update, user_data):
@@ -159,27 +159,8 @@ def rank(bot, update, user_data):
         reply_markup=ReplyKeyboardRemove())
     user_data['canteens'] = algo.sortByRank(user_data['canteens'])
     logger.info(user_data['canteens'])
-    sendCanteens(update, user_data['canteens'])
+    update.message.reply_text(algo.formatCanteens(user_data['canteens']))
     return exit(bot, update)
-
-def sendCanteens(update, canteens):
-    """
-    Sends out a list of canteens
-    Accepts an optional argument list of canteens to print out
-    """
-    msg = ""
-    for c in canteens:
-        msg += "{}\n".format(c['name'])
-        msg += "  Coordinates - {}\n".format(c['coords'])
-        if 'dist' in c:
-            msg += "  Distance - {}\n".format(c['dist'])
-        msg += "  Rank - {}\n".format(c['rank'])
-        msg += "  Opening hours - {}\n".format(c['opening_hours'])
-        msg += "  Food:\n"
-        for food, price in c['food'].items():
-            msg += "    {0} - ${1:0.2f}\n".format(food, price)
-        msg += "\n"
-    update.message.reply_text(msg)
 
 def exit(bot, update):
     user = update.message.from_user
@@ -208,7 +189,7 @@ def tMain():
                       pass_user_data=True)],
 
         states={
-            CHOICE: [RegexHandler('^(Find a canteen|Update information|Distance|Rank)$', choice,
+            CHOICE: [RegexHandler('^(Find a canteen|Distance|Rank)$', choice,
                      pass_user_data=True)],
 
             FOOD: [MessageHandler(Filters.text, food,

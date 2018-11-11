@@ -1,7 +1,7 @@
-from math import sqrt
+from math import sin, cos, sqrt, atan2, radians
 import db
 
-def getDistance(a, b):
+def getDistance(a, b, latlong):
     """
     Gets distance between two elements
     Accepts two tuples a and b, in the form (x,y)
@@ -12,6 +12,30 @@ def getDistance(a, b):
     dy = a[1] - b[1]
     dist = sqrt (dx * dx + dy * dy)
     return round(dist,2)
+
+def getDistLatLong(a,b):
+    """
+    Gets distance between two elements
+    Accepts two tuples a and b, in the form (lat,long)
+    Returns the distance between the two, rounded to 2 dp
+    """
+    # Approximate radius of earth in km
+    R = 6373.0
+
+    lat1 = radians(a[0])
+    lon1 = radians(a[1])
+    lat2 = radians(b[0])
+    lon2 = radians(b[1])
+
+    # Dist between the two points
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    # Returns distance in meters
+    return round(R*c * 1000, 2)
 
 def mergeDict(left, right, key):
     """
@@ -93,16 +117,19 @@ def searchByPrice(lower, upper, alist=db.readFile()):
             temp.append(canteen)
     return temp
 
-def sortByDist(userLocation, canteens=db.readFile()):
+def sortByDist(userLocation, canteens=db.readFile(), latlong=True):
     """
     Gets the distance between the user's location and each of the canteens
     Accepts userLocation as tuple (x,y), and optional argument list of canteens
+    If flag latlong is set, gets distance based on latitude and longtitude
     Returns a sorted list of canteens sorted by distances, in ascending order
     """
     dist = []
     for canteen in canteens:
-        dist = getDistance(userLocation,canteen['coords'])
+        # Uses either latitude-longtitude or coordinates
+        dist = getDistLatLong(userLocation, canteen['loc']) if latlong else getDistance(userLocation, canteen['coords'])
         canteen['dist'] = dist
+
     return mergesort(canteens, 'dist')
 
 def sortByRank(canteens=db.readFile()):
@@ -118,3 +145,21 @@ def editRank(canteen, newstuff):
         canteen['rank'] = int(newstuff)
         return True
     return False
+
+def formatCanteens(canteens=db.readFile()):
+    """
+    Formats a list of canteens for printing
+    Accepts an optional argument list of canteens to print out
+    Returns a formated list of canteens
+    """
+    msg = ""
+    for c in canteens:
+        msg += "{}\n".format(c['name'])
+        if 'dist' in c:
+            msg += "  Distance - {} m\n".format(c['dist'])
+        msg += "  Rank - {}\n".format(c['rank'])
+        msg += "  Food:\n"
+        for food, price in c['food'].items():
+            msg += "    {0} - ${1:0.2f}\n".format(food, price)
+        msg += "\n"
+    return msg

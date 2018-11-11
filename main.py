@@ -30,23 +30,6 @@ def getInput(msg, options=False):
         userInput = input("Give a valid input ({}): ".format('/'.join(map(str,range(1,len(options)+2)))))
     return userInput
 
-def printCanteens(canteens=db.readFile()):
-    """
-    Prints out a list of canteens
-    Accepts an optional argument list of canteens to print out
-    """
-    for c in canteens:
-        print("{}:".format(c['name']))
-        print("  Coordinates - {}".format(c['coords']))
-        if 'dist' in c:
-            print("  Distance - {}".format(c['dist']))
-        print("  Rank - {}".format(c['rank']))
-        print("  Opening hours - {}".format(c['opening_hours']))
-        print("  Food:")
-        for food, price in c['food'].items():
-            print("    {0} - ${1:0.2f}".format(food, price))
-        print()
-
 def getFood(canteens):
     """
     Asks user for food that user wants to eat, and filters out the canteens
@@ -149,13 +132,13 @@ def main():
             if sort == '1':
                 print("Please click your current location")
                 coords = gui.getCoordsClick(mapPath, scaledSize)
-                canteens = algo.sortByDist(coords, canteens)
+                canteens = algo.sortByDist(coords, canteens, False)
 
             # Sort by rank
             elif sort == '2':
                 canteens = algo.sortByRank(canteens)
 
-            printCanteens(canteens)
+            print(algo.formatCanteens(canteens))
 
     # Updates canteen
     elif action == '2':
@@ -172,7 +155,7 @@ def main():
 
             # Lists all canteens
             elif update == '1':
-                printCanteens()
+                print(algo.formatCanteens())
                 continue
 
             # Fetch a canteen and edit information
@@ -203,19 +186,14 @@ def main():
                         else:
                             print("Invalid input, try again with a number 1-10.\n")
 
-                    # Opening hours
-                    elif editType == '2':
-                        #Need to fill up condition
+                    # Update food
+                    elif type == 'food':
                         pass
-                        # if newstuff:
-                        #     newcanteens[int(editCan)-1][typeList[3]] = newstuff
-                        #     validInput = True
-                        #     break
-                        # print("Invalid input, try again with ...")
 
-                    # Exit
-                    elif editType == '4':
-                        validInput = True
+                    # Update price
+                    elif type == 'price':
+                        pass
+
                     else:
                         print("Currently unavailable.")
                         break
@@ -246,12 +224,12 @@ editMsg = "which canteen?"
 editList = [c['name'] for c in db.readFile()]
 
 typeMsg = "Which type of info?"
-typeList = ['rank','opening_hours','food']
+typeList = ['rank', 'food', 'price']
 
 guideline = {
     'rank'          : "For ranking, please input an integer between 1 and 10 :)",
-    'opening_hours' : "For opening hours, please input...",
-    'food'          : "You can only add food-price pairs."
+    'food'          : "You can only add food-price pairs.",
+    'price'         : "Some price message"
 }
 
 if __name__ == '__main__':
