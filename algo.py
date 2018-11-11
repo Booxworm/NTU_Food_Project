@@ -112,3 +112,9 @@ def sortByRank(canteens=db.readFile()):
     Returns a sorted list of canteens
     """
     return mergesort(canteens, 'rank')
+
+def editRank(canteen, newstuff):
+    if newstuff.isdigit() and 1 <= int(newstuff) <= 10:
+        canteen['rank'] = int(newstuff)
+        return True
+    return False

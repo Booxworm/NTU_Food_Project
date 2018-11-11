@@ -198,8 +198,7 @@ def main():
 
                     # Update rank
                     if type == 'rank':
-                        if newstuff.isdigit() and 1 <= int(newstuff) <= 10:
-                            newcanteens[canIndex][type] = int(newstuff)
+                        if editRank(newcanteens[canIndex], newstuff):
                             validInput = True
                         else:
                             print("Invalid input, try again with a number 1-10.\n")
