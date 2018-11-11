@@ -35,7 +35,7 @@ can16=(1.350618,103.681652)
 koufu=(1.342642,103.682791)
 NS=(1.347243,103.680236)
 quad=(1.345193,103.680549)"""
-
+"""
 lat=[]
 lat[0]=1.346763
 lat[1]=1.348434
@@ -58,14 +58,14 @@ lon[5]=103.682432
 lon[6]=103.681652
 lon[7]=103.682791
 lon[8]=103.680236
-lon[9]=103.680549
+lon[9]=103.680549"""
 
-for i in range(10):
+def dist(a,b):
 
-   lat1 = radians(lat[i])
-   lon1 = radians(lon[i])
-   lat2 = radians(x)
-   lon2 = radians(y)
+   lat1 = radians(a[0])
+   lon1 = radians(a[1])
+   lat2 = radians(b[0])
+   lon2 = radians(b[1])
 
    #dist between the user loc and each canteen
    dlon = lon2 - lon1
@@ -76,7 +76,7 @@ for i in range(10):
 
    distance = R * c
 
-   print("Result:", distance)
+   return distance
                                      
                                      
                                      
