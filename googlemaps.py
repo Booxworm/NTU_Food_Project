@@ -1,31 +1,50 @@
 import googlemaps
-from datetime import datetime
+from math import sin, cos, sqrt, atan2, radians
 
-gmaps = googlemaps.Client(key='Add Your Key here')
+"""                                    
+#lat and lon of the mouse click
+import arcpy  
+import pythonaddins  
+      
+class XYTool(object):  
+  """Implementation for xy_addin.XYTool (Tool)"""  
+     def __init__(self):  
+            self.enabled = True  
+            self.cursor=3  
+     def onMouseDownMap(self, x, y, button, shift):  
+              
+            mxd=arcpy.mapping.MapDocument("current")  
+            df = arcpy.mapping.ListDataFrames(mxd)[0]  
+            pt=arcpy.PointGeometry(arcpy.Point(x,y))  
+            #ptfeat=arcpy.management.CopyFeatures(pt,r"in_memory\pt")  
+            print x,y  
+            pythonaddins.MessageBox(str(x) + ", " + str(y), 'Coordinates', 0)  """
+ 
+#calc the dist between the user loc and the canteens
 
-# Geocoding an address
-geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
+# approximate radius of earth in km
+R = 6373.0
 
-# Look up an address with reverse geocoding
-reverse_geocode_result = gmaps.reverse_geocode((40.714224, -73.961452))
 
-# Request directions via public transit
-now = datetime.now()
-directions_result = gmaps.directions("Sydney Town Hall",
-                                     "Parramatta, NSW",
-                                     mode="transit",
-                                     departure_time=now)
-gmaps = googlemaps.Client(client_id=client_id, client_secret=client_secret)
+def dist(a,b):
 
-# Geocoding and address
-geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
+   lat1 = radians(a[0])
+   lon1 = radians(a[1])
+   lat2 = radians(b[0])
+   lon2 = radians(b[1])
 
-# Look up an address with reverse geocoding
-reverse_geocode_result = gmaps.reverse_geocode((40.714224, -73.961452))
+   #dist between the user loc and each canteen
+   dlon = lon2 - lon1
+   dlat = lat2 - lat1
 
-# Request directions via public transit
-now = datetime.now()
-directions_result = gmaps.directions("Sydney Town Hall",
-                                     "Parramatta, NSW",
-                                     mode="transit",
-                                     departure_time=now)
+   a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+   c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+   distance = R * c
+
+   return distance
+                                     
+                                     
+                                     
+                                     
+                                     
