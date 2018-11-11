@@ -1,7 +1,7 @@
 from math import sin, cos, sqrt, atan2, radians
 import db
 
-def getDistance(a, b, latlong):
+def getDistance(a, b):
     """
     Gets distance between two elements
     Accepts two tuples a and b, in the form (x,y)
@@ -139,12 +139,6 @@ def sortByRank(canteens=db.readFile()):
     Returns a sorted list of canteens
     """
     return mergesort(canteens, 'rank')
-
-def editRank(canteen, newstuff):
-    if newstuff.isdigit() and 1 <= int(newstuff) <= 10:
-        canteen['rank'] = int(newstuff)
-        return True
-    return False
 
 def formatCanteens(canteens=db.readFile()):
     """

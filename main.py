@@ -2,11 +2,11 @@ import gui
 import algo
 import db
 
-def getInput(msg, options=False):
+def getInput(msg, options=False, exit=True):
     """
     Prints out the input message, and lists out all the options provided
-    Adds an 'Exit' option as the last option
     Accepts the input message, and a list of options [optional] as parameters
+    Adds an 'Exit' option as the last option if exit flag is set
     Returns user input as a string, between '1' and the maximum number of options i.e. '5'
     """
     # Displays input message
@@ -19,15 +19,18 @@ def getInput(msg, options=False):
         return userInput
 
     # Prints out all options
-    for i in range(len(options)):
+    numberOfChoices = len(options)
+    for i in range(numberOfChoices):
         print("{}. {}".format(i+1, options[i]))
-    print("{}. Exit".format(len(options)+1))
+    if exit:
+        numberOfChoices += 1
+        print("{}. Exit".format(numberOfChoices))
 
     # Gets user input
     userInput = input("Option: ")
     print()
-    while not userInput.isdigit() or int(userInput) not in range(1,len(options)+2):
-        userInput = input("Give a valid input ({}): ".format('/'.join(map(str,range(1,len(options)+2)))))
+    while not userInput.isdigit() or int(userInput) not in range(1,numberOfChoices+1):
+        userInput = input("Give a valid input ({}): ".format('/'.join(map(str,range(1,numberOfChoices+1)))))
     return userInput
 
 def getFood(canteens):
@@ -39,17 +42,23 @@ def getFood(canteens):
     foodList = []
 
     # Gets list of food from user
-    food = input("What food would you like to eat today?\nEnter all the food you want to eat, and enter #### when done\n")
+    food = input("What food would you like to eat today?\nEnter all the food you want to eat, and enter #### when done\nIf empty, will take all foods\n")
     while food != '####':
         foodList.append(food)
         food = input()
     print()
-    for i in range(len(foodList)):
-        # Reformat the searches
-        foodList[i] = ''.join(foodList[i].lower().split())
 
-    # Searches for the food
-    temp = algo.searchByFood(foodList, canteens)
+    # Empty list, no filter on food
+    if not len(foodList):
+        return db.readFile()
+    # Filters out canteens based on the food list given
+    else:
+        for i in range(len(foodList)):
+            # Reformat the searches
+            foodList[i] = ''.join(foodList[i].lower().split())
+
+        # Searches for the food
+        temp = algo.searchByFood(foodList, canteens)
 
     # Choice not found
     if not len(temp):
@@ -147,7 +156,7 @@ def main():
             # Asks user what he wants to do
             update = getInput(updateMsg, updateList)
             canteens = db.readFile()
-            newcanteens = canteens
+            newCanteens = canteens
 
             # Exit
             if int(update) == len(updateList) + 1:
@@ -155,7 +164,7 @@ def main():
 
             # Lists all canteens
             elif update == '1':
-                print(algo.formatCanteens())
+                print(algo.formatCanteens(newCanteens))
                 continue
 
             # Fetch a canteen and edit information
@@ -176,29 +185,47 @@ def main():
                 while not validInput:
                     # Prints out specific guidelines for the property that the user is trying to update
                     print(guideline[type])
-                    newstuff = input("New {} for {}:".format(type, editList[canIndex]))
+                    newStuff = input("New {} for {}:".format(type, editList[canIndex]))
                     print()
 
-                    # Update rank
-                    if type == 'rank':
-                        if editRank(newcanteens[canIndex], newstuff):
+                    # Edit rank
+                    if type == 'Edit rank':
+                        if newStuff.isdigit() and 1 <= int(newStuff) <= 10:
+                            newCanteens[canIndex]['rank'] = int(newStuff)
                             validInput = True
                         else:
                             print("Invalid input, try again with a number 1-10.\n")
 
-                    # Update food
-                    elif type == 'food':
+                    # Add food
+                    elif type == 'Add food':
+                        food, price = newStuff.split(':')
+                        try:
+                            # Format food
+                            food = '_'.join(food.lower().split())
+
+                            # Check if price is a positive float
+                            if float(price) < 0:
+                                raise ValueError
+
+                            # Assigns new price
+                            newCanteens[canIndex]['food'][food] = float(price)
+                            validInput = True
+                        except ValueError:
+                            print("Invalid input, try again with this format: <food>:<price>")
+
+                    # Remove food
+                    elif type == 'Remove food':
                         pass
 
-                    # Update price
-                    elif type == 'price':
-                        pass
+                    # Edit food/price
+                    elif type == 'Edit food/price':
+                        foodList = list(newCanteens[canIndex]['food'].keys())
+                        getInput("", foodList, exit=False)
 
                     else:
                         print("Currently unavailable.")
                         break
-                        #print("invalid input, try agian.")
-                db.writeFile(newcanteens)
+                db.writeFile(newCanteens)
 
     # End program
     print("Thanks for using our app")
@@ -224,12 +251,12 @@ editMsg = "which canteen?"
 editList = [c['name'] for c in db.readFile()]
 
 typeMsg = "Which type of info?"
-typeList = ['rank', 'food', 'price']
+typeList = ['Edit rank', 'Add food', 'Remove food', 'Edit food/price']
 
 guideline = {
     'rank'          : "For ranking, please input an integer between 1 and 10 :)",
     'food'          : "You can only add food-price pairs.",
-    'price'         : "Some price message"
+    'price'         : "Which of these foods do you want to edit?\nUse the format <food>:<price>\nEg: chicken rice:4"
 }
 
 if __name__ == '__main__':
