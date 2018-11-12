@@ -1,10 +1,10 @@
-can1 291,311 1.346763,103.686018 1 cai_fan:3.0,western:5.0,japanese:5.0
-can2 271,264 1.348434,103.685535 2 ayam_penyet:5.0,western:5.0,xiao_long_bao:4.3,cai_fan:3.0
+can1 291,311 1.346763,103.686018 1 duck_rice:4.0,beef_noodles:4.5,mala_hotpot:4.0,ban_mian:4.2,cai_fan:3.2,chinese_cuisine:5.5,western_cuisine:5.0
+can2 271,264 1.348434,103.685535 2 takoyaki:2.4,waffles:1.5,japanese/western_cuisine:4.9,ayam_penyet:4.9,chicken_rice:3.0,xiao_long_bao:4.3,korean_cuisine:4.3,yon_tau_foo:3.8,sichuan_cuisine:6.0,cai_fan:3.0
 can9 279,141 1.352515,103.68576 3 mala:3.5,japanese:5.0
-can11 303,68 1.355156,103.686944 5 cai_fan:2.8,waffles:2.0
+can11 303,68 1.355156,103.686944 4 cai_fan:2.8,waffles:2.0
 can13 144,162 1.351925,103.681628 5 western:5.0,japanese:4.0
 can14 178,126 1.352961,103.682432 6 ban_mian:4.0,cai_fan:3.0
 can16 142,199 1.350618,103.681652 7 cai_fan:3.0,chicken_rice:3.0
-canA 113,298 1.347243,103.680236 8 western:4.8,cai_fan:3.0,ban_mian:3.5
-canB 178,431 1.342642,103.682791 9 ban_mian:4.0,vegetarian:2.5
-quadCafe 104,362 1.345193,103.680549 10 mala:4.0,western:5.0,wanton_mee:7.0
+canA 113,298 1.347243,103.680236 8 mini_wok:3.8,yong_tau_foo:3.5,chicken_rice:3.0,ban_mian:3.0,cai_fan:3.2,duck_rice:3.3,western_cuisine:4.8,soup:4.0,indian_cuisine:4.5,malay_cuisine:4.0,vegetarian:3.0,mala_hotpot:3.5,claypot_rice:6.8,vietnamese_cuisine:4.8,pasta:4.8
+canB 178,431 1.342642,103.682791 9 poke_bowl:4.9,salad_bento:5.2,indian_cuisine:3.0,chicken_rice:3.0,yong_tau_foo:4.5,ban_mian:3.5,chinese_cuisine:2.9,pasta:4.0,cai_fan:3.0,japanese_cuisine:4.0,vegetarian:2.8,nasi_padang:3.0
+quadCafe 104,362 1.345193,103.680549 10 korean_cuisine:5.8,chicken_rice:3.0,yong_tau_foo:4.8,chinese_cuisine:4.0,indian_cuisine:5.5,claypot_rice:5.5,cai_fan:3.5

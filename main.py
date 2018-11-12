@@ -204,26 +204,37 @@ def main():
                     # Remove food
                     elif type == 'Remove food':
                         foodList = list(newCanteens[canIndex]['food'].keys())
-                        index = int(getInput("Select food to remove", foodList, exit=False)) - 1
-                        newCanteens[canIndex]['food'].pop(foodList[index])
+                        # Canteen still has food to remove
+                        if len(foodList):
+                            index = int(getInput("Select food to remove", foodList, exit=False)) - 1
+                            newCanteens[canIndex]['food'].pop(foodList[index])
+                        # No food in the canteen
+                        else:
+                            print("Sorry, no foods to remove\n")
                         validInput = True
 
                     # Edit food/price
                     elif type == 'Edit food/price':
                         foodList = list(newCanteens[canIndex]['food'].keys())
-                        index = int(getInput("Select food to edit", foodList, exit=False)) - 1
-                        price = input("Select new price for {}: ".format(foodList[index]))
-                        print()
-                        try:
-                            # Check if price is a positive float
-                            if float(price) < 0:
-                                raise ValueError
+                        # Canteen still has food to edit
+                        if len(foodList):
+                            index = int(getInput("Select food to edit", foodList, exit=False)) - 1
+                            price = input("Select new price for {}: ".format(foodList[index]))
+                            print()
+                            try:
+                                # Check if price is a positive float
+                                if float(price) < 0:
+                                    raise ValueError
 
-                            # Assigns new price
-                            newCanteens[canIndex]['food'][foodList[index]] = float(price)
+                                # Assigns new price
+                                newCanteens[canIndex]['food'][foodList[index]] = float(price)
+                                validInput = True
+                            except ValueError:
+                                print("Invalid input, try again with price as a positive number")
+                        # No food in the canteen
+                        else:
+                            print("Sorry, no foods to edit\n")
                             validInput = True
-                        except ValueError:
-                            print("Invalid input, try again with price as a positive number")
 
                     else:
                         print("Currently unavailable.")

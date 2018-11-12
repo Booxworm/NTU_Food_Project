@@ -49,13 +49,14 @@ def readFile():
             c['food'] = {}
 
             # Formats food list
-            foodList = data[4].split(',')
-            newList = []
-            for foodPair in foodList:
-                foodPair = foodPair.split(':')
-                foodPair[1] = float(foodPair[1])
-                newList.append(foodPair)
-            c['food'].update(newList)
+            if len(data) == 5 and len(data[4]):
+                foodList = data[4].split(',')
+                newList = []
+                for foodPair in foodList:
+                    foodPair = foodPair.split(':')
+                    foodPair[1] = float(foodPair[1])
+                    newList.append(foodPair)
+                c['food'].update(newList)
             canteens.append(c)
     return canteens
 
