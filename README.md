@@ -20,20 +20,7 @@ You can run the program by typing
 $ python main.py
 ```
 
-# Using Git from command line
-
-To commit changes
+To run the telegram bot, type
 ```
-$ git add .
-$ git commit -m "Commit message"
-```
-
-To get changes from server
-```
-$ git pull
-```
-
-To push changes to server
-```
-$ git push origin master
+$ python tBot.py
 ```
